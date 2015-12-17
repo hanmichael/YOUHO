@@ -1,0 +1,77 @@
+package com.sxt.view;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.ScrollView;
+
+public class GoodsScrollView extends ScrollView{
+
+	private LinearLayout linear;
+	private LinearLayout UpLinear;
+	private LinearLayout DownLinear;
+
+	public GoodsScrollView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		initView();
+	}
+
+	private void initView(){
+		//编写scrollview中嵌套linearlayout
+		linear = new LinearLayout(getContext());
+		linear.setOrientation(LinearLayout.VERTICAL);
+		linear.setLayoutParams
+		(new FrameLayout.LayoutParams
+				(FrameLayout.LayoutParams.MATCH_PARENT,
+						FrameLayout.LayoutParams.WRAP_CONTENT));
+		addView(linear);
+		//根据上下关系初始化up以及down
+		UpLinear = new LinearLayout(getContext());
+		UpLinear.setOrientation(LinearLayout.VERTICAL);
+		UpLinear.setLayoutParams
+		(new LinearLayout.LayoutParams
+				(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+		linear.addView(UpLinear);
+		DownLinear = new LinearLayout(getContext());
+		DownLinear.setOrientation(LinearLayout.VERTICAL);
+		DownLinear.setLayoutParams
+		(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+				LinearLayout.LayoutParams.WRAP_CONTENT));
+		linear.addView(DownLinear);
+	}
+
+	//设置uplinear显示内容方法
+	public void setUpView(View view){
+		UpLinear.addView(view);
+	}
+
+	//设置donwlinear显示内容方法
+	public void setDownView(ListView view){
+		measureLv(view);
+		DownLinear.addView(view);
+	} 
+
+	//由于scrollview嵌套listview测量listview高度
+	private void measureLv(ListView view){
+		int height = 0;
+		ListAdapter adapter = view.getAdapter();
+		if(adapter == null)
+			return;
+		for(int i = 0;i < adapter.getCount();i ++){
+			View itemView = adapter.getView(i, null, null);
+			itemView.measure(0, 0);
+			height+=itemView.getMeasuredHeight();
+		}
+		height = height + view.getDividerHeight()*adapter.getCount() + 
+				view.getPaddingBottom() + view.getPaddingTop();
+		LinearLayout.LayoutParams lp = 
+				new LinearLayout.LayoutParams
+				(LinearLayout.LayoutParams.MATCH_PARENT, height);
+		view.setLayoutParams(lp);
+	}
+
+}

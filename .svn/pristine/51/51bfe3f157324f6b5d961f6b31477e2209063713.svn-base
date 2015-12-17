@@ -1,0 +1,238 @@
+package com.sxt.fragment;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import android.app.ExpandableListActivity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ExpandableListView;
+import android.widget.ImageView;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.TextView;
+import android.widget.ImageView.ScaleType;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+
+import com.sxt.activity.MyApplication;
+import com.sxt.activity.R;
+import com.sxt.adapter.BrandExpandAdapter;
+import com.sxt.adapter.HotBrandAdapter;
+import com.sxt.base.BaseFragment;
+import com.sxt.base.BaseHandler;
+import com.sxt.bean.AdvertInfo;
+import com.sxt.bean.AllBrandInfo;
+import com.sxt.bean.BrandInfo;
+import com.sxt.bean.NetStrInfo;
+import com.sxt.callback.LetterLissener;
+import com.sxt.model.HttpModel;
+import com.sxt.thread.HttpThread;
+import com.sxt.view.AdverstView;
+import com.sxt.view.BrandScrollUi;
+import com.sxt.view.LetterView;
+
+/**
+ * 品牌fragment
+ * */
+public class BrandFragment extends BaseFragment implements LetterLissener{
+
+	private LetterView mLett;//自定义字母索引View
+	private String[] arr = {"a","b","c","d","e","f","j"};
+	private List<String>letter = new ArrayList<String>();
+	private View BrandView;//scrollview中显示xml
+	private BrandScrollUi mSc;//与brandfragment下关联的xml下的自定义的scrollview
+	private RecyclerView recycler;
+	private RelativeLayout mBrandViewTop;
+	private TextView mBrandView_TitleTv;
+	private LinearLayout mAdversetLinear;//广告linearlayout
+	private LinearLayout mHotBrandLinear;//热门品牌容器
+	private ExpandableListView mEv;//所有品牌列表
+	private AdverstView mAd;//广告轮播界面
+	private List<BrandInfo>hotList;//热门品牌数据源
+	private List<AllBrandInfo>allList = new ArrayList<AllBrandInfo>();//所有品牌数据源
+	private List<AdvertInfo>advertList;//广告数据源
+	private List<View>adViewList = new ArrayList<View>();//广告界面容器数据源
+	private HotBrandAdapter hotAdapter;//热门品牌适配器
+	private BrandExpandAdapter expandAdapter;//所有品牌适配器
+
+	@Override
+	public View initView() {
+		View v = View.inflate(getActivity(), R.layout.fragment_brand, null);
+		mSc = (BrandScrollUi) v.findViewById(R.id.BrandFragment_SC);
+		mLett = (LetterView) v.findViewById(R.id.BrandFragment_Lett);
+		mLett.setCall(this);
+		BrandView = View.inflate(getActivity(), R.layout.view_brand, null);
+		mSc.setShowView(BrandView);//要显示内容添加给scrollview
+		mBrandViewTop = (RelativeLayout) BrandView.findViewById(R.id.BrandViewTop);
+		mBrandView_TitleTv = (TextView) BrandView.findViewById(R.id.BrandView_TitleTv);
+		//查找brandview下控件
+		mAd = new AdverstView();
+		mAdversetLinear = (LinearLayout) BrandView.findViewById(R.id.BrandView_AdvesetLinear);
+		mHotBrandLinear = (LinearLayout) BrandView.findViewById(R.id.BrandView_Recyler);
+		mEv = (ExpandableListView) BrandView.findViewById(R.id.BrandView_Expand);
+		mEv.setDivider(getResources().getDrawable(R.drawable.lv_line));
+		//热门品牌空间
+		recycler = new RecyclerView(getActivity());
+		recycler.setLayoutParams
+		(new LinearLayout.LayoutParams
+				(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT));
+		//指定recycler线性方向
+		LinearLayoutManager lm = new LinearLayoutManager(getActivity());
+		lm.setOrientation(LinearLayoutManager.HORIZONTAL);
+		recycler.setLayoutManager(lm);
+		recycler.setHasFixedSize(true);//固定itemview大小
+		recycler.setItemAnimator(new DefaultItemAnimator());//item切换动画
+		return v;
+	}
+
+	@Override
+	protected void initList() {
+		super.initList();
+		//获取轮播广告数据
+		NetStrInfo adverstInfo = new NetStrInfo();
+		adverstInfo.arg1 = 0;
+		adverstInfo.ctx = getActivity();
+		adverstInfo.hand = hand;
+		adverstInfo.interfaceStr = HttpModel.ADVERTURL;
+		adverstInfo.netFlag = 1;
+		adverstInfo.pramase = "";
+		((MyApplication)getActivity().getApplication()).Thread_Pool.execute(new HttpThread(adverstInfo));
+		//获取热门品牌数据
+		NetStrInfo hotInfo = new NetStrInfo();
+		hotInfo.arg1 = 1;
+		hotInfo.ctx = getActivity();
+		hotInfo.hand = hand;
+		hotInfo.interfaceStr = HttpModel.HOTBRANDURL;
+		hotInfo.netFlag = 1;
+		hotInfo.pramase = "";
+		((MyApplication)getActivity().getApplication()).Thread_Pool.execute(new HttpThread(hotInfo));
+		//获取全部品牌数据
+		NetStrInfo allInfo = new NetStrInfo();
+		allInfo.arg1 = 2;
+		allInfo.ctx = getActivity();
+		allInfo.hand = hand;
+		allInfo.interfaceStr = HttpModel.ALLBRANDURL;
+		allInfo.netFlag = 1;
+		allInfo.pramase = "parames={\"page\":\"10\"}";
+		((MyApplication)getActivity().getApplication()).Thread_Pool.execute(new HttpThread(allInfo));
+	}
+
+	@Override
+	protected void setClick() {
+		super.setClick();
+	}
+
+	//接收字母导航选中首字母
+	@Override
+	public void call(int index) {
+		if(mSc!=null && index < allList.size())
+			mSc.setLetterIndex(index);
+	}
+
+	BaseHandler hand = new BaseHandler(){
+		public void handleMessage(android.os.Message msg) {
+			super.handleMessage(msg);
+			if(msg.arg1 == 0){
+				//广告操作
+				advertList = (List<AdvertInfo>) msg.obj;
+				if(advertList != null){
+					//配置自定义广告界面数据源
+					for(AdvertInfo info :advertList){
+						ImageView img = new ImageView(getActivity());
+						img.setScaleType(ScaleType.FIT_XY);
+						img.setLayoutParams(
+								new ViewGroup.LayoutParams
+								(ViewGroup.LayoutParams.MATCH_PARENT,
+										ViewGroup.LayoutParams.MATCH_PARENT));
+						img.setTag(info.imgpath);
+						adViewList.add(img);
+					}
+					//读取广告界面底部显示点
+					Bitmap bitN = BitmapFactory.decodeResource(getResources(), R.drawable.home_banner_dot_down_black);
+					Bitmap bitP = BitmapFactory.decodeResource(getResources(), R.drawable.home_banner_dot_down);
+					mAd.create(getActivity(), bitN, bitP, adViewList, mAdversetLinear.getMeasuredHeight());
+					mAdversetLinear.addView(mAd.getView());
+				}
+			}else if(msg.arg1 == 1){
+				//热门品牌
+				hotList = (List<BrandInfo>) msg.obj;
+				if(hotList!=null){
+					hotAdapter = new HotBrandAdapter(hotList, getActivity());
+					mHotBrandLinear.addView(recycler);
+					recycler.setAdapter(hotAdapter);
+				}
+			}else if(msg.arg1 == 2){
+				//所有品牌
+				List<BrandInfo>list = (List<BrandInfo>) msg.obj;
+				classesAllBrand(list);
+				mLett.setList(letter);//设置右侧字母索引
+				expandAdapter = new BrandExpandAdapter(allList, getActivity());
+				mEv.setAdapter(expandAdapter);
+				//默认打开expandablelistview
+				for(int i = 0;i < allList.size();i ++){
+					mEv.expandGroup(i);
+				}
+				measureChildHeight();
+				//计算expand高度
+				mSc.measureExpandableListView(mEv);
+			}
+		};
+	};
+
+	//分类操作所有品牌数据
+	private void classesAllBrand(List<BrandInfo>list){
+
+		//获取所有品牌数据中首字母
+		Set<String> set = new HashSet<String>();
+		for(BrandInfo info:list){
+			set.add(info.letter);
+		}
+		letter.addAll(set);
+		//首字母排序
+		Collections.sort(letter);
+		//循环遍历排序后首字母->原始list按首字母分类
+		for(String s : letter){
+			AllBrandInfo info = new AllBrandInfo();
+			info.letter = s;
+			//allbrandinfo中使用的list->对应首字母数据list
+			List<BrandInfo>bList = new ArrayList<BrandInfo>();
+			for(BrandInfo i : list){
+				//首字母相同添加bList
+				if(i.letter.equals(s)){
+					bList.add(i);
+				}
+			}
+			if(bList.size() > 0){
+				info.list = bList;
+				allList.add(info);
+			}
+		}
+
+		//测试分类结果
+		for(AllBrandInfo info : allList){
+			LOGE(info.letter);
+			LOGE(""+info.list.size());
+		}
+
+	}
+
+	//获取scrollview中顶部直到热门品牌位置的高度
+	private void measureChildHeight(){
+		LinearLayout.LayoutParams tvLp = (LayoutParams) mBrandView_TitleTv.getLayoutParams();
+		LinearLayout.LayoutParams hotLp = (LayoutParams) mHotBrandLinear.getLayoutParams();
+		mSc.setTopHeight
+		(mBrandViewTop.getMeasuredHeight(),
+				mAdversetLinear.getMeasuredHeight(),
+				(mBrandView_TitleTv.getMeasuredHeight()+tvLp.topMargin+tvLp.bottomMargin), 
+				(mHotBrandLinear.getMeasuredHeight()+hotLp.bottomMargin));
+	}
+
+}

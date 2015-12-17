@@ -1,0 +1,33 @@
+package com.sxt.fragment;
+
+import android.view.View;
+
+import com.sxt.activity.R;
+import com.sxt.base.BaseFragment;
+
+/**
+ * ∑÷¿‡fragment
+ * */
+public class CategoryFragment extends BaseFragment{
+
+	private View view;
+
+	@Override
+	public View initView() {
+		view = View.inflate(getActivity(), R.layout.fragment_category, null);
+		return view;
+	}
+
+	@Override
+	protected void initList() {
+		// TODO Auto-generated method stub
+		super.initList();
+	}
+
+	@Override
+	protected void setClick() {
+		// TODO Auto-generated method stub
+		super.setClick();
+	}
+
+}

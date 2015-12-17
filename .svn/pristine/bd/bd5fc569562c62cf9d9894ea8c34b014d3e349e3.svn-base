@@ -1,0 +1,237 @@
+package com.sxt.activity;
+
+import java.util.List;
+
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.sxt.adapter.GoodsValueAdvrstAdapter;
+import com.sxt.adapter.GoodsValueLvAdapter;
+import com.sxt.base.BaseActivity;
+import com.sxt.base.BaseHandler;
+import com.sxt.bean.GoodsInfo;
+import com.sxt.bean.ImgInfo;
+import com.sxt.bean.ImgvaleInfo;
+import com.sxt.bean.NetStrInfo;
+import com.sxt.model.HttpModel;
+import com.sxt.net.img.ImageLoad;
+import com.sxt.thread.HttpThread;
+import com.sxt.view.GoodsScrollView;
+
+/**
+ * 商品详情界面
+ * */
+public class GoodsValueActivity extends BaseActivity 
+implements OnClickListener,OnPageChangeListener{
+
+	private String goodsId;//商品id从上一级商品列表中获取
+	private String name;//店铺名称
+	private String img;//店铺图标
+	//和goodsValueactivity相关联xml下控件
+	private RelativeLayout mCartBtn;
+	private TextView mNumTv;
+	private Button mAddCartBtn;
+	private ImageView mLikeImg;
+	private GoodsScrollView mSc;
+	//自定scrollview中上方显示
+	private View UpView;
+	private ViewPager mVp;
+	private LinearLayout mPointLinear;
+	private TextView mTitleTv;
+	private TextView mGoodsValue_DisCountTv;
+	private TextView mGoodsValue_PriceTv;
+	private ImageView mGoodsValue_BrandImg;
+	private TextView mGoodsValue_BrandName;
+	private TextView mGoodsValue_GoShopTv;
+	private GoodsValueAdvrstAdapter adverstAdater;
+	//顶部大图点图标
+	private Bitmap pBit;
+	private Bitmap nBit;
+	//自定scrollview中下方显示view
+	private ListView DownView;
+	private GoodsValueLvAdapter adapter;
+	private List<ImgvaleInfo>vList;
+	private ImageView mBackImg;
+	private ImageView mShareImg;
+	private List<GoodsInfo>list;
+	private List<ImgInfo>imgList;
+	private ImageLoad load;
+
+	@Override
+	protected void initView() {
+		super.initView();
+		load = new ImageLoad();
+		//		goodsId = getIntent().getStringExtra("goods");
+		name = getIntent().getStringExtra("name");
+		img = getIntent().getStringExtra("img");
+		LOGE("name:"+name);
+		LOGE("img:"+img);
+		create(R.layout.activity_goodsvalue);
+		mCartBtn = (RelativeLayout) f(R.id.GoodsValue_CartRelative);
+		mBackImg = (ImageView) f(R.id.GoodsValue_BackImg);
+		mShareImg = (ImageView) f(R.id.GoodsValue_ShareImg);
+		mNumTv = (TextView) f(R.id.GoodsValue_NumTv);
+		mAddCartBtn = (Button) f(R.id.GoodsValue_AddCartBtn);
+		mLikeImg = (ImageView) f(R.id.GoodsValue_LikeImg);
+		mSc = (GoodsScrollView) f(R.id.GoodsValue_Sc);
+		//加载上部界面
+		UpView = View.inflate(this, R.layout.view_goodsvalue_up, null);
+		mVp = (ViewPager) UpView.findViewById(R.id.GoodsValue_Vp);
+		mPointLinear = (LinearLayout) UpView.findViewById(R.id.GoodsValue_VpLinear);
+		mTitleTv = (TextView) UpView.findViewById(R.id.GoodsValue_TitleTv);
+		mGoodsValue_DisCountTv = (TextView) UpView.findViewById(R.id.GoodsValue_DisCountTv);
+		mGoodsValue_PriceTv = (TextView) UpView.findViewById(R.id.GoodsValue_PriceTv);
+		mGoodsValue_BrandImg = (ImageView) UpView.findViewById(R.id.GoodsValue_BrandImg);
+		mGoodsValue_BrandName = (TextView) UpView.findViewById(R.id.GoodsValue_BrandName);
+		mGoodsValue_GoShopTv = (TextView) UpView.findViewById(R.id.GoodsValue_GoShopTv);
+		mVp.setOnPageChangeListener(this);
+		load.LoadImg(img, mGoodsValue_BrandImg);
+		mGoodsValue_BrandName.setText(name);
+		//加载下部界面
+		DownView = (ListView) View.inflate(this, R.layout.view_goodsvalue_down, null);
+		mBackImg.setOnClickListener(this);
+		mShareImg.setOnClickListener(this);
+		mAddCartBtn.setOnClickListener(this);
+	}
+
+	@Override
+	protected void initList() {
+		super.initList();
+		pBit = BitmapFactory.decodeResource(getResources(), R.drawable.home_banner_dot_down);
+		nBit = BitmapFactory.decodeResource(getResources(), R.drawable.home_banner_dot_down_black);
+		NetStrInfo info = new NetStrInfo();
+		info.arg1 = 0;
+		info.ctx = this;
+		info.hand = hand;
+		info.interfaceStr = HttpModel.GOODSVALUEURL;
+		info.netFlag = 1;
+		info.pramase = "parames={\"goods_id\":\""+goodsId+"\"}";
+		((MyApplication)getApplicationContext()).Thread_Pool.execute(new HttpThread(info));
+	}
+
+	BaseHandler hand = new BaseHandler(){
+		public void handleMessage(android.os.Message msg) {
+			super.handleMessage(msg);
+			if(msg.what != 200)
+				return ;
+			if(msg.arg1 == 0){
+				//处理请求商品详情返回值
+				list = (List<GoodsInfo>) msg.obj;
+				//获取顶部图片数据源以及加载
+				imgList = list.get(0).imgList;
+				vList = list.get(0).valueList;
+				updateView();
+			}
+		};
+	};
+
+	//修改商品详情界面商品信息方法
+	private void updateView(){
+		if(imgList.size() > 0){
+			adverstAdater = new GoodsValueAdvrstAdapter(imgList, GoodsValueActivity.this);
+			mVp.setAdapter(adverstAdater);
+			//动态创建viewpager下索引点
+			createPoint();
+		}
+		LOGE("vList.size():"+vList.size());
+		if(vList.size() > 0){
+			adapter = new GoodsValueLvAdapter(vList, this);
+			DownView.setAdapter(adapter);
+		}
+		//up以及down添加进入mSc
+		mSc.setUpView(UpView);
+		mSc.setDownView(DownView);
+		//添加商品标题价格
+		mTitleTv.setText(list.get(0).title);
+		mGoodsValue_DisCountTv.setText(list.get(0).distance);
+		mGoodsValue_PriceTv.setText(list.get(0).price);
+
+	}
+
+	//动态创建viewpager下索引点
+	private void createPoint(){
+		for(int i = 0;i < imgList.size();i ++){
+			ImageView img = new ImageView(this);
+			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams
+					(LinearLayout.LayoutParams.WRAP_CONTENT,
+							LinearLayout.LayoutParams.WRAP_CONTENT);
+			lp.rightMargin = 5;
+			img.setLayoutParams
+			(lp);
+			if(i == 0)
+				img.setImageBitmap(pBit);
+			else 
+				img.setImageBitmap(nBit);
+			mPointLinear.addView(img, i);
+		}
+	}
+
+	@Override
+	public void onClick(View arg0) {
+
+		if(R.id.GoodsValue_BackImg == arg0.getId()){
+			finish();
+		}else if(R.id.GoodsValue_ShareImg == arg0.getId()){
+
+		}else if(R.id.GoodsValue_AddCartBtn == arg0.getId()){
+			//			NetStrInfo info = new NetStrInfo();
+			//			info.arg1 = 1;
+			//			info.ctx = this;
+			//			info.hand = hand;
+			//			info.interfaceStr = HttpModel.ADDCARTURL;
+			//			info.netFlag = 1;
+			//			info.pramase = "";
+			//判断用户是否登录
+			if(!((MyApplication)getApplicationContext()).userInfo.id.equals("")){
+				Intent intent = new Intent(GoodsValueActivity.this,AddCartActivity.class);
+				intent.putExtra("title",list.get(0).title);
+				intent.putExtra("price", list.get(0).price);
+				intent.putExtra("discount", list.get(0).distance);
+				intent.putExtra("img", list.get(0).imgList.get(0).imgpath);
+				intent.putExtra("goodsID", goodsId);
+				startActivity(intent);
+			}else{
+				//跳转用户登陆界面
+			}
+		}
+	}
+
+	@Override
+	public void onPageScrollStateChanged(int arg0) {
+	}
+
+	@Override
+	public void onPageScrolled(int arg0, float arg1, int arg2) {
+	}
+
+	@Override
+	public void onPageSelected(int arg0) {
+		if(arg0 == imgList.size()){
+			//滑动查看商品信息界面->scrollview
+			mVp.setCurrentItem(arg0-1);
+			mSc.setScrollDown();
+			return;
+		}else{
+			//查找点容器下所有imageview根据索引切换白色点图片
+			for(int i = 0;i < imgList.size();i ++){
+				ImageView img = (ImageView) mPointLinear.getChildAt(i);
+				img.setImageBitmap(nBit);
+				if(i == arg0){
+					img.setImageBitmap(pBit);
+				}
+			}
+		}
+	}
+
+}

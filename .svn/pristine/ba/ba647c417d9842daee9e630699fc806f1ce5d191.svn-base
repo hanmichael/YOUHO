@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f7f7f7"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/CartListAct_Top"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#1c1c1c" >
+
+        <ImageView
+            android:id="@+id/CartListAct_BackImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/ic_back_normal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/CartListAct_BackImg"
+            android:text="购物车"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/CartListAct_EdtTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:text="编辑"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/CartListAct_Bottem"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="#ffffff" >
+
+        <ImageView
+            android:id="@+id/CartListAct_SelectImg"
+            android:layout_width="35dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/cart_selent_highlighted" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/CartListAct_SelectImg"
+            android:layout_alignRight="@id/CartListAct_SelectImg"
+            android:layout_below="@id/CartListAct_SelectImg"
+            android:text="全选"
+            android:textColor="#1c1c1c"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/CartListAct_PayBtn"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_margin="10dp"
+            android:background="@drawable/addcart_bg"
+            android:text="结算"
+            android:textColor="#ffffff" />
+
+        <Button
+            android:id="@+id/CartListAct_LikeBtn"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@id/CartListAct_PayBtn"
+            android:background="@drawable/addcart_bg"
+            android:text="移入收藏"
+            android:textColor="#ffffff"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/CartListAct_AllTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/CartListAct_PayBtn"
+            android:layout_toLeftOf="@id/CartListAct_PayBtn"
+            android:text="sadsadasdsadsadsa"
+            android:textColor="#ff0000"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/CartListAct_Tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/CartListAct_PayBtn"
+            android:layout_alignRight="@id/CartListAct_AllTv"
+            android:layout_below="@id/CartListAct_AllTv"
+            android:text="sadsadasd"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/CartListAct_Lv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/CartListAct_Bottem"
+        android:layout_below="@id/CartListAct_Top" >
+    </ListView>
+
+</RelativeLayout>

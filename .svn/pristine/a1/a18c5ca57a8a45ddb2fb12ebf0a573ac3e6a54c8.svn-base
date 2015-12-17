@@ -1,0 +1,109 @@
+package com.sxt.base;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.sxt.activity.MyApplication;
+import com.sxt.activity.R;
+import com.sxt.bean.AdvertInfo;
+import com.sxt.bean.NetStrInfo;
+import com.sxt.model.HttpModel;
+import com.sxt.thread.HttpThread;
+import com.sxt.view.AdverstView;
+import com.sxt.view.PullListView;
+
+import android.graphics.BitmapFactory;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
+
+/**
+ * 逛界面下所有fragment基类
+ * */
+public class BaseSeeFragment extends BaseFragment{
+
+	private List seeList;
+	private PullListView mLv;
+	private AdverstView mAd;
+	private List<AdvertInfo>adList;//广告返回数据
+	private List<View>adViewList = new ArrayList<View>();
+	private int pageindex = 10;//页面索引
+
+	@Override
+	public View initView() {
+		View view = View.inflate(getActivity(), R.layout.fragment_basesee, null);
+		mLv = (PullListView) view.findViewById(R.id.BaseSeeFragment_Lv);
+		mAd = new AdverstView();
+		return view;
+	}
+
+	@Override
+	public void onDestroyView() {
+		mAd.stopTime();
+		super.onDestroyView();
+	}
+
+	//控制广告轮播view隐藏方法
+	public void disAD(){
+		mLv.disADView();
+	}
+
+	public int getPage(){
+		return pageindex;
+	}
+
+	//发送网络请求
+	public void createList(String interfaceName,String parames,boolean ADFlag){
+		if(ADFlag){
+			//发起广告请求操作
+			NetStrInfo info = new NetStrInfo();
+			info.arg1 = 0;
+			info.ctx = getActivity();
+			info.hand = hand;
+			info.interfaceStr = HttpModel.ADVERTURL;
+			info.pramase = "";
+			info.netFlag = 1;
+			((MyApplication)getActivity().getApplicationContext()).Thread_Pool.execute(new HttpThread(info));
+		}
+		//发起逛接口
+		NetStrInfo seeInfo = new NetStrInfo();
+		seeInfo.arg1 = 1;
+		seeInfo.ctx = getActivity();
+		seeInfo.hand = hand;
+		seeInfo.interfaceStr = interfaceName;
+		seeInfo.netFlag = 1;
+		seeInfo.pramase = parames;
+		((MyApplication)getActivity().getApplicationContext()).Thread_Pool.execute(new HttpThread(seeInfo));
+	}
+
+	BaseHandler hand = new BaseHandler(){
+		public void handleMessage(android.os.Message msg) {
+			disDiaLog();
+			super.handleMessage(msg);
+			if(msg.arg1 == 0){
+				//接收广告返回数据
+				adList = (List<AdvertInfo>) msg.obj;
+				for(AdvertInfo info:adList){
+					ImageView img = new ImageView(getActivity());
+					img.setScaleType(ScaleType.FIT_XY);
+					img.setLayoutParams
+					(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+							ViewGroup.LayoutParams.MATCH_PARENT));
+					img.setTag(info.imgpath);
+					adViewList.add(img);
+				}
+				mAd.create(getActivity(),
+						BitmapFactory.decodeResource(getResources(), 
+								R.drawable.home_banner_dot_down_black),
+								BitmapFactory.decodeResource(getResources(), R.drawable.home_banner_dot_down)
+								, adViewList, mLv.getADHeight());
+				mLv.setADView(mAd.getView());
+				mAd.startTime();
+			}else if(msg.arg1 == 1){
+				//接收逛返回数据
+			}
+		};
+	};
+
+}

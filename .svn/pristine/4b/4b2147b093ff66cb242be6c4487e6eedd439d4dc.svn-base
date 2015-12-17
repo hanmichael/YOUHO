@@ -1,0 +1,7 @@
+package com.sxt.model;
+
+public class ActionModel {
+
+	public static String FrameUiAction = "com.sxt.frameui";
+
+}

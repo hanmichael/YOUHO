@@ -1,0 +1,89 @@
+package com.sxt.fragment;
+
+import android.graphics.Color;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.sxt.activity.R;
+import com.sxt.base.BaseFragment;
+import com.sxt.base.BaseHandler;
+import com.sxt.callback.PullToLoadScrollLissener;
+import com.sxt.view.PullToLoadScroll;
+
+/**
+ * 首页fragment
+ * */
+public class HomeFragment extends BaseFragment implements PullToLoadScrollLissener{
+
+	private View view;
+	private PullToLoadScroll mSC;
+
+	@Override
+	public View initView() {
+		view = View.inflate(getActivity(), R.layout.fragment_home, null);
+		mSC = (PullToLoadScroll) view.findViewById(R.id.HomeFragmentSC);
+		mSC.setCall(this);//设置下拉以及上啦监听
+		TextView tv = new TextView(getActivity());
+		tv.setBackgroundColor(Color.BLUE);
+		tv.setLayoutParams(new LinearLayout.LayoutParams
+				(LinearLayout.LayoutParams.MATCH_PARENT, 2000));
+		mSC.setContentView(tv);
+		return view;
+	}
+
+	@Override
+	protected void initList() {
+		super.initList();
+	}
+
+	@Override
+	protected void setClick() {
+		super.setClick();
+	}
+
+	@Override
+	public void RefrashCall() {
+
+		new Thread(){
+
+			public void run(){
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				hand.sendEmptyMessage(200);
+			}
+
+		}.start();
+
+	}
+
+	@Override
+	public void LoadCall() {
+		new Thread(){
+
+			public void run(){
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				hand.sendEmptyMessage(200);
+			}
+
+		}.start();
+	}
+
+	//处理所有网络相关handler
+	BaseHandler hand = new BaseHandler(){
+		public void handleMessage(android.os.Message msg) {
+			super.handleMessage(msg);
+			mSC.commplate();
+		};
+	};
+
+}

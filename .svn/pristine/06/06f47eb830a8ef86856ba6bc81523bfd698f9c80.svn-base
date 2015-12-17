@@ -1,0 +1,8 @@
+package com.sxt.bean;
+
+public class OrderChildInfo {
+
+	public String str;
+	public boolean flag;
+
+}

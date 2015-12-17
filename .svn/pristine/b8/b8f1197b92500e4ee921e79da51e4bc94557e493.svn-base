@@ -1,0 +1,59 @@
+package com.sxt.thread;
+
+import android.os.Message;
+
+import com.sxt.base.BaseNetInfo;
+import com.sxt.bean.NetBitmapInfo;
+import com.sxt.bean.NetStrInfo;
+import com.sxt.net.str.PostUtils;
+import com.sxt.net.str.UpBitmapUtils;
+import com.sxt.utils.IsNetUtils;
+import com.sxt.utils.JSONUtils;
+
+/**
+ * 网络操作线程
+ * */
+public class HttpThread implements Runnable{
+
+	private BaseNetInfo info;
+	private IsNetUtils isnet;
+	private JSONUtils utils = new JSONUtils();//json数据解析使用
+
+	public HttpThread(BaseNetInfo info){
+		this.info = info;
+		isnet = new IsNetUtils(this.info.ctx);
+	}
+
+	@Override
+	public void run() {
+		Message msg = info.hand.obtainMessage();
+		msg.arg1 = info.arg1;
+		//网络状态判断(无)
+		if(!isnet.IsNet()){
+			//发送消息到ui线程->无网络提示
+			msg.what = 201;
+			msg.obj = "网络漫游中";
+			info.hand.sendMessage(msg);
+			return;
+		}
+		String result = null;//网络操作返回值
+		//有网络->区分请求方式
+		if(info.netFlag == 1){
+			//请求JSON数据
+			result = new PostUtils().PostStr((NetStrInfo)info);
+			//网络是否请求成功判断
+		}else if(info.netFlag == 2){
+			//上传图片操作
+			result = new UpBitmapUtils().upBitmap((NetBitmapInfo)info);
+		}
+		if(result.indexOf("{")!=0&&result.indexOf("[")!=0){
+			msg.what = 201;
+			msg.obj = result;
+		}else{
+			msg.what = 200;
+			msg.obj = utils.getAdvertLidst(result);
+		}
+		info.hand.sendMessage(msg);
+	}
+
+}

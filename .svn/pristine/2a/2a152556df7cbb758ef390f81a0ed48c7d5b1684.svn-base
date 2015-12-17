@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <ScrollView
+            android:id="@+id/MyFragment_Sc"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#cccccc" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="@drawable/mine_banner_boy"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" >
+
+                    <com.sxt.view.CyclerImg
+                        android:id="@+id/MyFragment_UserHead"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_centerVertical="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/home_banner" />
+
+                    <TextView
+                        android:id="@+id/MyFragment_UserName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/MyFragment_UserHead"
+                        android:text="hehe"
+                        android:textColor="#ffffff"
+                        android:textSize="22sp" />
+
+                    <Button
+                        android:id="@+id/MyFragment_LoginBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="登录/注册"
+                        android:textColor="#ffffff"
+                        android:visibility="gone" />
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/bg" />
+            </LinearLayout>
+        </ScrollView>
+
+        <RelativeLayout
+            android:id="@+id/MyFragmentTop"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:alpha="0.3"
+            android:background="#000000"
+            android:paddingLeft="10dp" >
+
+            <ImageView
+                android:id="@+id/MyFragment_SetImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:src="@drawable/mine_setting_p" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="我的"
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
+
+            <RelativeLayout
+                android:id="@+id/MyFragment_MsgImg"
+                android:layout_width="45dp"
+                android:layout_height="35dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true" >
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/mine_msg_n" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/mine_notification"
+                    android:gravity="center"
+                    android:text="6"
+                    android:textColor="#ffffff" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </FrameLayout>
+
+</LinearLayout>

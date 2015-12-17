@@ -1,0 +1,68 @@
+package com.sxt.activity;
+
+import android.support.v4.view.ViewPager;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import com.sxt.base.BaseActivity;
+import com.sxt.base.BaseHandler;
+import com.sxt.bean.NetStrInfo;
+import com.sxt.model.HttpModel;
+import com.sxt.thread.HttpThread;
+import com.sxt.view.GoodsScrollView;
+
+/**
+ * 商品详情界面
+ * */
+public class GoodsValueActivity extends BaseActivity{
+
+	private String goodsId;//商品id从上一级商品列表中获取
+	//和goodsValueactivity相关联xml下控件
+	private RelativeLayout mCartBtn;
+	private TextView mNumTv;
+	private Button mAddCartBtn;
+	private ImageView mLikeImg;
+	private GoodsScrollView mSc;
+	//自定scrollview中上方显示view
+	private ViewPager mVp;
+	//自定scrollview中下方显示view
+
+	@Override
+	protected void initView() {
+		super.initView();
+		goodsId = getIntent().getStringExtra("goods");
+		LOGE("GoodsVALUE"+goodsId);
+		create(R.layout.activity_goodsvalue);
+		mCartBtn = (RelativeLayout) f(R.id.GoodsValue_CartRelative);
+		mNumTv = (TextView) f(R.id.GoodsValue_NumTv);
+		mAddCartBtn = (Button) f(R.id.GoodsValue_AddCartBtn);
+		mLikeImg = (ImageView) f(R.id.GoodsValue_LikeImg);
+		mSc = (GoodsScrollView) f(R.id.GoodsValue_Sc);
+	}
+
+	@Override
+	protected void initList() {
+		super.initList();
+		NetStrInfo info = new NetStrInfo();
+		info.arg1 = 0;
+		info.ctx = this;
+		info.hand = hand;
+		info.interfaceStr = HttpModel.GOODSVALUEURL;
+		info.netFlag = 1;
+		info.pramase = "parames={\"goods_id\":\""+goodsId+"\"}";
+		((MyApplication)getApplicationContext()).Thread_Pool.execute(new HttpThread(info));
+	}
+
+	BaseHandler hand = new BaseHandler(){
+		public void handleMessage(android.os.Message msg) {
+			super.handleMessage(msg);
+			if(msg.what != 200)
+				return ;
+			if(msg.arg1 == 0){
+				//处理请求商品详情返回值
+			}
+		};
+	};
+
+}

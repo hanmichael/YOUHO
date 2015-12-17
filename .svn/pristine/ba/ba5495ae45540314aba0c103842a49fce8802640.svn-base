@@ -1,0 +1,75 @@
+package com.sxt.fragment;
+
+import android.graphics.Color;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.sxt.activity.R;
+import com.sxt.base.BaseFragment;
+
+/**
+ * 分类fragment下->品类fragment
+ * */
+
+public class ClassFragment extends BaseFragment implements OnClickListener{
+
+	private TextView mBoyTv,mGirlTv,mKidTv,mLifeStyleTv;
+	private ListView mBottemLv;
+	private ListView mTopLv;
+
+	@Override
+	public View initView() {
+		View view = View.inflate(getActivity(), R.layout.fragment_classes, null);
+		mBoyTv = (TextView) view.findViewById(R.id.ClassesFragment_BoyTv);
+		mGirlTv = (TextView) view.findViewById(R.id.ClassesFragment_GirlTv);
+		mKidTv = (TextView) view.findViewById(R.id.ClassesFragment_KidTv);
+		mLifeStyleTv = (TextView) view.findViewById(R.id.ClassesFragment_LifeStyleTv);
+		mBottemLv = (ListView) view.findViewById(R.id.ClassesFragment_BottemLv);
+		mTopLv = (ListView) view.findViewById(R.id.ClassesFragment_TopLv);
+		return view;
+	}
+
+	@Override
+	protected void initList() {
+		super.initList();
+	}
+
+	@Override
+	protected void setClick() {
+		super.setClick();
+		mBoyTv.setOnClickListener(this);
+		mGirlTv.setOnClickListener(this);
+		mKidTv.setOnClickListener(this);
+		mLifeStyleTv.setOnClickListener(this);
+	}
+
+	@Override
+	public void onClick(View v) {
+		int ID = v.getId();
+		clearColor();
+		switch(ID){
+		case R.id.ClassesFragment_BoyTv:
+			mBoyTv.setTextColor(Color.BLACK);
+			break;
+		case R.id.ClassesFragment_GirlTv:
+			mGirlTv.setTextColor(Color.BLACK);
+			break;
+		case R.id.ClassesFragment_KidTv:
+			mKidTv.setTextColor(Color.BLACK);
+			break;
+		case R.id.ClassesFragment_LifeStyleTv:
+			mLifeStyleTv.setTextColor(Color.BLACK);
+			break;
+		}
+	}
+
+	//所有索引textview颜色变灰
+	private void clearColor(){
+		mBoyTv.setTextColor(Color.GRAY);
+		mGirlTv.setTextColor(Color.GRAY);
+		mKidTv.setTextColor(Color.GRAY);
+		mLifeStyleTv.setTextColor(Color.GRAY);
+	}
+}

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#1C1C1C"
+        android:paddingBottom="2dp" >
+
+        <ImageView
+            android:id="@+id/CategoryFragment_TabMenuImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/tab_menu" />
+
+        <TextView
+            android:id="@+id/CategoryFragment_BrandTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="品牌"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/CategoryFragment_ClassTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="30dp"
+            android:layout_toLeftOf="@id/CategoryFragment_BrandTv"
+            android:text="品类"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/CategoryFragment_AboutTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30dp"
+            android:layout_toRightOf="@id/CategoryFragment_BrandTv"
+            android:text="关注"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/CategoryFragment_centerLine"
+            android:layout_width="40dp"
+            android:layout_height="5dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="#ffffff"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/CategoryFragment_leftLine"
+            android:layout_width="40dp"
+            android:layout_height="5dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="27dp"
+            android:layout_toLeftOf="@id/CategoryFragment_centerLine"
+            android:background="#ffffff" />
+
+        <TextView
+            android:id="@+id/CategoryFragment_rightLine"
+            android:layout_width="40dp"
+            android:layout_height="5dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="27dp"
+            android:layout_toRightOf="@+id/CategoryFragment_centerLine"
+            android:background="#ffffff"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/CategoryFragment_FragmentGroup"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </RelativeLayout>
+
+</LinearLayout>

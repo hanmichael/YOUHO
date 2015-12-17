@@ -1,0 +1,32 @@
+package com.sxt.fragment;
+
+import android.view.View;
+
+import com.sxt.activity.R;
+import com.sxt.base.BaseFragment;
+
+/**
+ * Ê×Ò³fragment
+ * */
+public class HomeFragment extends BaseFragment{
+
+	private View view;
+
+	@Override
+	public View initView() {
+		view = View.inflate(getActivity(), R.layout.fragment_home, null);
+		return view;
+	}
+
+	@Override
+	protected void initList() {
+		super.initList();
+	}
+
+	@Override
+	protected void setClick() {
+		super.setClick();
+	}
+
+
+}

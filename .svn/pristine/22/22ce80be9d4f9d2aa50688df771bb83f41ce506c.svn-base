@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="classes_arr">
+        <item>上衣</item>
+        <item>裤装</item>
+        <item>鞋靴</item>
+        <item>包类</item>
+        <item>服配</item>
+        <item>家居服</item>
+        <item>泳衣</item>
+    </string-array>
+
+</resources>

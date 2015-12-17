@@ -1,0 +1,70 @@
+package com.sxt.activity;
+
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.sxt.base.BaseActivity;
+import com.sxt.base.BaseHandler;
+
+/**
+ * 加入购物车界面
+ * */
+
+public class AddCartActivity extends BaseActivity implements OnClickListener{
+
+	private ImageView mImg;
+	private TextView mTitleTv;
+	private TextView mDiscountTv;
+	private TextView mPriceTv;
+	private LinearLayout mColorLinear;
+	private LinearLayout mSizeLinear;
+	private TextView mLeftTv;
+	private TextView mCenterTv;
+	private TextView mRightTv;
+	private Button mOkBtn;
+
+
+	@Override
+	protected void initView() {
+		super.initView();
+		create(R.layout.activity_addcart);
+		mImg = (ImageView) f(R.id.AddCartAct_Img);
+		mTitleTv = (TextView) f(R.id.AddCartAct_TitleTv);
+		mDiscountTv = (TextView) f(R.id.AddCartAct_DiscountTv);
+		mPriceTv = (TextView) f(R.id.AddCartAct_PriceTv);
+		mColorLinear = (LinearLayout) f(R.id.AddCartAct_ColorLinear);
+		mSizeLinear = (LinearLayout) f(R.id.AddCartAct_SizeLinear);
+		mLeftTv = (TextView) f(R.id.AddCartAct_MinuteTv);
+		mCenterTv = (TextView) f(R.id.AddCartAct_NumberTv);
+		mRightTv = (TextView) f(R.id.AddCartAct_PlusTv);
+		mOkBtn = (Button) f(R.id.AddCartAct_OkBtn);
+		mOkBtn.setOnClickListener(this);
+		mLeftTv.setOnClickListener(this);
+		mRightTv.setOnClickListener(this);
+	}
+
+	@Override
+	protected void initList() {
+		super.initList();
+	}
+
+	BaseHandler hand = new BaseHandler(){
+		public void handleMessage(android.os.Message msg) {
+			super.handleMessage(msg);
+			if(msg.what != 200)
+				return;
+
+		};
+	};
+
+
+	@Override
+	public void onClick(View arg0) {
+		// TODO Auto-generated method stub
+
+	}	
+}

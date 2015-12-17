@@ -1,0 +1,108 @@
+package com.sxt.activity;
+
+import java.util.List;
+
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.ExpandableListView;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.sxt.adapter.OkOrderAdapter;
+import com.sxt.base.BaseActivity;
+import com.sxt.base.BaseHandler;
+import com.sxt.bean.CartListInfo;
+import com.sxt.bean.NetStrInfo;
+import com.sxt.model.HttpModel;
+import com.sxt.thread.HttpThread;
+import com.sxt.view.OrderScrollView;
+
+public class OkOrderActivity extends BaseActivity implements 
+OnClickListener{
+
+	private ImageView img;
+	private OrderScrollView msc;
+	//toplinear中使用view
+	private View topView;
+	private TextView mAddress;
+	//cenlinear使用的view
+	private ExpandableListView mexpand;
+	private ListView mLv;
+	//bottemlinear中使用view
+	private View bottemView;
+	private TextView mPrice;
+	private Button mBtn;
+	//mLv数据源
+	private List<CartListInfo>list;
+	private OkOrderAdapter adapter;
+
+	@Override
+	protected void initView() {
+		super.initView();
+		create(R.layout.activity_okorder);
+		img = (ImageView) f(R.id.OkOrderAct_BackImg);
+		msc = (OrderScrollView) f(R.id.OkOrderAct_Sc);
+		//top
+		topView = View.inflate(this, R.layout.view_ordertop, null);
+		mAddress = (TextView) topView.findViewById(R.id.OrderTop_AddressTv);
+		//bottem
+		bottemView = View.inflate(this, R.layout.view_orderbottem, null);
+		mPrice = (TextView) bottemView.findViewById(R.id.OrderBottem_Money);
+		mBtn = (Button) bottemView.findViewById(R.id.OrderBottem_OkBtn);
+		//center
+		mexpand = new ExpandableListView(this);
+		mLv = new ListView(this);
+		img.setOnClickListener(this);
+		mBtn.setOnClickListener(this);
+		msc.setTopView(topView);
+		msc.setBottemView(bottemView);
+	}
+
+	@Override
+	protected void initList() {
+		super.initList();
+		NetStrInfo info = new NetStrInfo();
+		info.arg1 = 0;
+		info.ctx = this;
+		info.hand = hand;
+		info.interfaceStr = HttpModel.OKORDER;
+		info.netFlag = 1;
+		info.pramase = "parames={\"userid\":\""+((MyApplication)getApplicationContext()).userInfo.id+"\"}";
+		((MyApplication)getApplicationContext()).Thread_Pool.execute(new HttpThread(info));
+		//创建虚拟支付方式等内容
+		
+	}
+
+	BaseHandler hand = new BaseHandler(){
+		public void handleMessage(android.os.Message msg) {
+			super.handleMessage(msg);
+			if(msg.what!=200){
+				return;
+			}
+			//确认订单借口返回值
+			if(msg.arg1 == 0){
+				list = (List<CartListInfo>) msg.obj;
+				adapter = new OkOrderAdapter(list,
+						OkOrderActivity.this);
+				mLv.setAdapter(adapter);
+				msc.setLv(mLv);
+			}
+		};
+	};
+
+	@Override
+	public void onClick(View arg0) {
+		int ID = arg0.getId();
+		switch(ID){
+		case R.id.OkOrderAct_BackImg:
+			finish();
+			break;
+		}
+	}
+
+
+}

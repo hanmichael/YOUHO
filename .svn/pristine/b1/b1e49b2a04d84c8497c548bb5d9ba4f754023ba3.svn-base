@@ -1,0 +1,21 @@
+package com.sxt.activity;
+
+import com.sxt.thread.HttpThreadPool;
+
+import android.app.Application;
+import android.content.Context;
+
+public class MyApplication extends Application{
+
+	public static Context ctx;
+	public HttpThreadPool Thread_Pool;
+	public DialogActivity DialogAct;//对话框样式的activity 
+
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		ctx = this;
+		Thread_Pool = new HttpThreadPool();
+	}
+
+}

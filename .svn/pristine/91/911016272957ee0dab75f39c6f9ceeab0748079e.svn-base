@@ -1,0 +1,19 @@
+package com.sxt.fragment;
+
+import com.sxt.base.BaseSeeFragment;
+import com.sxt.model.HttpModel;
+
+public class See6Fragment extends BaseSeeFragment{
+
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		//{key:value}->{"key":"value"}\"="
+		showDialog();
+		createList(HttpModel.NEWSLISTURL, "parames={\"page\":\"" +
+				""+getPage()+"\"" +
+				",\"classes\":\"5\"}", false);
+	}
+
+}

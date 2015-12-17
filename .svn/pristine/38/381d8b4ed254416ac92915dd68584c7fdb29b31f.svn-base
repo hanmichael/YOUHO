@@ -1,0 +1,116 @@
+package com.sxt.view;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.View;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.ScrollView;
+
+/**
+ * 确认订单中使用scrollview
+ * */
+public class OrderScrollView extends ScrollView{
+
+	private ExpandableListView mExpand;
+	private ListView mLv;
+	private LinearLayout mTopLinear;
+	private LinearLayout mBotemLinear;
+	private LinearLayout mCenter;
+	private LinearLayout mLinear;
+
+	public OrderScrollView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		initView();
+	}
+
+	private void initView(){
+		mLinear = new LinearLayout(getContext());
+		mLinear.setLayoutParams
+		(new FrameLayout.LayoutParams
+				(FrameLayout.LayoutParams.MATCH_PARENT, 
+						FrameLayout.LayoutParams.WRAP_CONTENT));
+		mLinear.setOrientation(LinearLayout.VERTICAL);
+		addView(mLinear);
+		mTopLinear = new LinearLayout(getContext());
+		mTopLinear.setLayoutParams
+		(new LinearLayout.LayoutParams
+				(LinearLayout.LayoutParams.MATCH_PARENT,
+						LinearLayout.LayoutParams.WRAP_CONTENT));
+		mTopLinear.setOrientation(LinearLayout.VERTICAL);
+		mCenter = new LinearLayout(getContext());
+		mCenter.setLayoutParams
+		(new LinearLayout.LayoutParams
+				(LinearLayout.LayoutParams.MATCH_PARENT,
+						LinearLayout.LayoutParams.WRAP_CONTENT));
+		mCenter.setOrientation(LinearLayout.VERTICAL);
+		mBotemLinear = new LinearLayout(getContext());
+		mBotemLinear.setLayoutParams
+		(new LinearLayout.LayoutParams
+				(LinearLayout.LayoutParams.MATCH_PARENT,
+						LinearLayout.LayoutParams.WRAP_CONTENT));
+		mBotemLinear.setOrientation(LinearLayout.VERTICAL);
+		mLinear.addView(mTopLinear);
+		mLinear.addView(mCenter);
+		mLinear.addView(mBotemLinear);
+	}
+
+	//设置top
+	public void setTopView(View v){
+		mTopLinear.addView(v);
+	}
+	//设置bottem
+	public void setBottemView(View v){
+		mBotemLinear.addView(v);
+	}
+
+	//添加expandablelistview
+	public void setExpand(ExpandableListView mExpand){
+		this.mExpand = mExpand;
+		measureExpand();
+		mCenter.addView(mExpand);
+		requestLayout();
+	}
+	//添加listview
+	public void setLv(ListView lv){
+		this.mLv = lv;
+		measureLv();
+		mCenter.addView(mLv);
+		requestLayout();
+	}
+	//计算ExpandableListView
+	private void measureExpand(){
+		int height = 0;
+		BaseExpandableListAdapter adapter = (BaseExpandableListAdapter) mExpand.getAdapter();
+		for(int i = 0;i < adapter.getGroupCount();i ++){
+			View groupView = adapter.getGroupView(i,false, null, null);
+			groupView.measure(0, 0);
+			height += groupView.getMeasuredHeight();
+		}
+		height=height+mExpand.getPaddingTop()+mExpand.getPaddingBottom()
+				+mExpand.getDividerHeight()*adapter.getGroupCount();
+		mExpand.setLayoutParams(
+				new LinearLayout.LayoutParams(
+						LinearLayout.LayoutParams.MATCH_PARENT, 
+						height));
+	}
+	//计算ListView
+	private void measureLv(){
+		ListAdapter adapter = mLv.getAdapter();
+		int height = 0;
+		for(int i = 0;i < adapter.getCount();i ++){
+			View itemView = adapter.getView(i, null, null);
+			itemView.measure(0,0);
+			height+=itemView.getMeasuredHeight();
+		}
+		height = height + mLv.getPaddingBottom()+
+				mLv.getPaddingTop()+mLv.getDividerHeight()*adapter.getCount();
+		mLv.setLayoutParams(new LinearLayout.LayoutParams
+				(LinearLayout.LayoutParams.MATCH_PARENT, height));
+	}
+
+}

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="#ffffff"
+        android:paddingLeft="15dp"
+        android:paddingRight="8dp" >
+
+        <ImageView
+            android:id="@+id/CartListItem_SelectImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/cart_selent_highlighted" />
+
+        <ImageView
+            android:id="@+id/CartListItem_Img"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/CartListItem_SelectImg" />
+
+        <TextView
+            android:id="@+id/CartListItem_PriceTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="20dp"
+            android:text="345"
+            android:textColor="#ff0000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/CartListItem_NumTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/CartListItem_PriceTv"
+            android:text="x1"
+            android:textColor="#000000"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/CartListItem_PriceTv"
+            android:layout_toRightOf="@id/CartListItem_Img"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/CartListItem_TitleTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="saddsa"
+                android:textColor="#000000"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/CartListItem_SCTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="saddsa"
+                android:textColor="#000000"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,208 @@
+package com.sxt.view;
+
+import java.util.List;
+
+import com.sxt.net.img.ImageLoad;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.Handler;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+
+/**
+ * 广告轮播界面
+ * */
+
+public class AdverstView implements ViewPager.OnPageChangeListener{
+
+	private Context ctx;
+	private Bitmap pointN;//默认图标
+	private Bitmap pointP;//选中图标
+	private List<View> list;//viewpager中显示数据源
+	private int Height = 0;//广告栏高度
+	private RelativeLayout mumRelative;//整体广告栏布局
+	private ViewPager vp;//广告轮播viewpager
+	private LinearLayout bottemLinear;//底部显示点容器
+	private int Index = 0;//viewpager正在显示界面索引
+	private boolean TimmerFlag = true;//定时标志
+	private boolean ScrollFlag = false;//手指拖动标志
+	private ImageLoad load = new ImageLoad();//异步加载图片工具类
+
+	//初始化界面方法
+	public void create(Context ctx,Bitmap pointN,
+			Bitmap pointP,List<View> list,
+			int Heigh){
+		this.ctx = ctx;
+		this.pointN = pointN;
+		this.pointP = pointP;
+		this.list = list;
+		this.Height = Heigh;
+		initView();
+		initPager();
+	}
+
+	//初始化控件方法
+	private void initView(){
+
+		mumRelative = new RelativeLayout(ctx);
+		mumRelative.setLayoutParams(
+				new LinearLayout.LayoutParams
+				(LinearLayout.LayoutParams.MATCH_PARENT, Height));
+		vp = new ViewPager(ctx);
+		vp.setLayoutParams(new RelativeLayout.LayoutParams
+				(RelativeLayout.LayoutParams.MATCH_PARENT,
+						RelativeLayout.LayoutParams.MATCH_PARENT));
+		mumRelative.addView(vp);
+		bottemLinear = new LinearLayout(ctx);
+		RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams
+				(RelativeLayout.LayoutParams.WRAP_CONTENT,pointN.getHeight());
+		lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
+		lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+		lp.bottomMargin = pointN.getHeight();
+		bottemLinear.setLayoutParams(lp);
+		bottemLinear.setOrientation(LinearLayout.HORIZONTAL);
+		mumRelative.addView(bottemLinear);
+		//按照viewpager数据源的数量添加显示当前页的点
+		for(int i = 0;i < list.size();i ++){
+			ImageView img = new ImageView(ctx);
+			LinearLayout.LayoutParams imgLp= new LinearLayout.LayoutParams
+					(LinearLayout.LayoutParams.WRAP_CONTENT,
+							LinearLayout.LayoutParams.MATCH_PARENT);
+			imgLp.leftMargin = 10;
+			img.setLayoutParams(imgLp);
+			if(i == 0)
+				img.setImageBitmap(pointP);
+			else
+				img.setImageBitmap(pointN);
+			img.setId(i);
+			bottemLinear.addView(img, i);
+		}
+	}
+
+	//初始化viewpager相关配置
+	private void initPager(){
+		vp.setAdapter(new MyAdapter());
+		vp.setOnPageChangeListener(this);
+	}
+
+	//获取view方法
+	public View getView(){
+		return mumRelative;
+	}
+
+	//viewpager使用适配器
+	private class MyAdapter extends PagerAdapter{
+
+		@Override
+		public int getCount() {
+			return list.size();
+		}
+
+		@Override
+		public boolean isViewFromObject(View arg0, Object arg1) {
+			return arg0 == arg1;
+		}
+
+		@Override
+		public void destroyItem(ViewGroup container, int position, Object object) {
+			container.removeView(list.get(position));
+		}
+
+		@Override
+		public Object instantiateItem(ViewGroup container, int position) {
+			ImageView img = (ImageView) list.get(position);
+			String imgName = (String) img.getTag();
+			container.addView(img);
+			load.LoadImg(imgName, img);
+			return list.get(position);
+		}
+
+	}
+
+
+	@Override
+	public void onPageScrollStateChanged(int arg0) {
+
+		if(arg0 == ViewPager.SCROLL_STATE_IDLE){
+			ScrollFlag = false;
+		}else{
+			ScrollFlag = true;
+		}
+
+	}
+
+
+	@Override
+	public void onPageScrolled(int arg0, float arg1, int arg2) {
+	}
+
+
+	@Override
+	public void onPageSelected(int arg0) {
+		Index = arg0;
+		//切换底部imageview
+		selectImg();
+	}
+
+	//开启广告轮播
+	public void startTime(){
+		TimmerFlag = true;
+		new TimmerThread().start();
+	}
+
+	//关闭广告轮播
+	public void stopTime(){
+		TimmerFlag = false;
+	}
+
+	//根据viewpager显示的索引切换底部imageview显示的图标
+	private void selectImg(){
+		for(int i = 0;i < list.size();i ++){
+			ImageView img =  (ImageView) bottemLinear.getChildAt(i);
+			if(i == Index){
+				img.setImageBitmap(pointP);
+			}else{
+				img.setImageBitmap(pointN);
+			}
+		}
+	}
+
+	//定时线程->定时更新广告显示界面
+	class TimmerThread extends Thread{
+		public void run(){
+			while(TimmerFlag){
+				try {
+					Thread.sleep(3*1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if(!ScrollFlag)
+					hand.sendEmptyMessage(0);
+			}
+		}
+	}
+
+	//接收定时线程发送消息handler
+	Handler hand = new Handler(){
+		public void handleMessage(android.os.Message msg) {
+			super.handleMessage(msg);
+			if(msg.what == 0 && list != null){
+				//切换界面
+				Index++;
+				//滑动到边界时切换到0
+				if(Index >= list.size()){
+					Index = 0;
+				}
+				vp.setCurrentItem(Index);
+			}
+		};
+	};
+
+}

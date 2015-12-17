@@ -1,0 +1,27 @@
+package com.sxt.activity;
+
+import com.sxt.base.BaseActivity;
+import com.sxt.base.BaseHandler;
+
+public class OkOrderActivity extends BaseActivity{
+
+	@Override
+	protected void initView() {
+		super.initView();
+	}
+
+	@Override
+	protected void initList() {
+		super.initList();
+	}
+
+	BaseHandler hand = new BaseHandler(){
+		public void handleMessage(android.os.Message msg) {
+			super.handleMessage(msg);
+			if(msg.what!=200){
+				return;
+			}
+		};
+	};
+
+}

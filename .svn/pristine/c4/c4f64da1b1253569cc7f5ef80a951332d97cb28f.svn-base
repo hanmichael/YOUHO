@@ -1,0 +1,242 @@
+package com.sxt.fragment;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import android.graphics.Color;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.sxt.activity.MyApplication;
+import com.sxt.activity.R;
+import com.sxt.adapter.ClassesAdapter;
+import com.sxt.adapter.ClassesTopAdapter;
+import com.sxt.base.BaseFragment;
+import com.sxt.base.BaseHandler;
+import com.sxt.bean.ClassesBottemInfo;
+import com.sxt.bean.ClassesInfo;
+import com.sxt.bean.NetStrInfo;
+import com.sxt.model.HttpModel;
+import com.sxt.thread.HttpThread;
+
+/**
+ * 分类fragment下->品类fragment
+ * */
+
+public class ClassFragment extends BaseFragment implements 
+OnClickListener,OnItemClickListener{
+
+	private TextView mBoyTv,mGirlTv,mKidTv,mLifeStyleTv;
+	private ListView mBottemLv;
+	private ListView mTopLv;
+	private List<ClassesBottemInfo>list = new ArrayList<ClassesBottemInfo>();
+	private List<ClassesInfo>TopList;
+	private TranslateAnimation in;//listview划入动画
+	private TranslateAnimation out;//listview划出动画
+	private ClassesAdapter bottemAdapter;
+	private ClassesTopAdapter topAdapter;
+	private int Index = 0;//区分接口使用:boy0;girl1;kid0;lifestyle2;
+
+	@Override
+	public View initView() {
+		View view = View.inflate(getActivity(), R.layout.fragment_classes, null);
+		mBoyTv = (TextView) view.findViewById(R.id.ClassesFragment_BoyTv);
+		mGirlTv = (TextView) view.findViewById(R.id.ClassesFragment_GirlTv);
+		mKidTv = (TextView) view.findViewById(R.id.ClassesFragment_KidTv);
+		mLifeStyleTv = (TextView) view.findViewById(R.id.ClassesFragment_LifeStyleTv);
+		mBottemLv = (ListView) view.findViewById(R.id.ClassesFragment_BottemLv);
+		mTopLv = (ListView) view.findViewById(R.id.ClassesFragment_TopLv);
+		mBottemLv.setOnItemClickListener(this);
+		mTopLv.setOnItemClickListener(this);
+		initAnim();
+		updateView();
+		return view;
+	}
+
+	//载入动画方法
+	private void initAnim(){
+		in = (TranslateAnimation) AnimationUtils.loadAnimation(getActivity(), R.anim.classes_in);
+		out = (TranslateAnimation) AnimationUtils.loadAnimation(getActivity(), R.anim.classes_out);
+		out.setAnimationListener(new AnimationListener() {
+
+			@Override
+			public void onAnimationStart(Animation animation) {
+
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+
+			}
+
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				mTopLv.clearAnimation();
+				mTopLv.setVisibility(View.GONE);
+			}
+		});
+	}
+
+	@Override
+	protected void initList() {
+		super.initList();
+		String []arr = getActivity().getResources().getStringArray(R.array.classes_arr);
+		for(String s:arr){
+			ClassesBottemInfo info = new ClassesBottemInfo();
+			info.flag = false;
+			info.title = s;
+			list.add(info);
+		}
+		//		showDialog();
+		//		NetStrInfo boyInfo = new NetStrInfo();
+		//		boyInfo.arg1 = 0;
+		//		boyInfo.ctx = getActivity();
+		//		boyInfo.hand = hand;
+		//		boyInfo.interfaceStr = HttpModel.BOYURL;
+		//		boyInfo.netFlag = 1;
+		//		boyInfo.pramase = "";
+		//		((MyApplication)getActivity().
+		//				getApplicationContext()).Thread_Pool.execute(new HttpThread(boyInfo));
+	}
+
+	//关联适配方法
+	private void updateView(){
+		bottemAdapter = new ClassesAdapter(list, getActivity());
+		mBottemLv.setAdapter(bottemAdapter);
+	}
+
+	@Override
+	protected void setClick() {
+		super.setClick();
+		mBoyTv.setOnClickListener(this);
+		mGirlTv.setOnClickListener(this);
+		mKidTv.setOnClickListener(this);
+		mLifeStyleTv.setOnClickListener(this);
+	}
+
+	@Override
+	public void onClick(View v) {
+		int ID = v.getId();
+		clearColor();
+		switch(ID){
+		case R.id.ClassesFragment_BoyTv:
+			Index = 0;
+			mBoyTv.setTextColor(Color.BLACK);
+			break;
+		case R.id.ClassesFragment_GirlTv:
+			Index = 1;
+			mGirlTv.setTextColor(Color.BLACK);
+			break;
+		case R.id.ClassesFragment_KidTv:
+			Index = 0;
+			mKidTv.setTextColor(Color.BLACK);
+			break;
+		case R.id.ClassesFragment_LifeStyleTv:
+			Index = 2;
+			mLifeStyleTv.setTextColor(Color.BLACK);
+			break;
+		}
+	}
+
+	//所有索引textview颜色变灰
+	private void clearColor(){
+		mBoyTv.setTextColor(Color.GRAY);
+		mGirlTv.setTextColor(Color.GRAY);
+		mKidTv.setTextColor(Color.GRAY);
+		mLifeStyleTv.setTextColor(Color.GRAY);
+	}
+
+	BaseHandler hand = new BaseHandler(){
+		public void handleMessage(android.os.Message msg) {
+			disDiaLog();
+			super.handleMessage(msg);
+			if(msg.arg1 == 0){
+				TopList = (List<ClassesInfo>) msg.obj;
+			}else if(msg.arg1 == 1){
+				TopList = (List<ClassesInfo>) msg.obj;
+			}else if(msg.arg1 == 2){
+				TopList = (List<ClassesInfo>) msg.obj;
+			}
+			if(TopList!=null){
+				topAdapter = null;
+				topAdapter = new ClassesTopAdapter(TopList, getActivity());
+				mTopLv.setAdapter(topAdapter);
+				mTopLv.setVisibility(View.VISIBLE);
+				mTopLv.startAnimation(in);
+			}
+		};
+	};
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		//区分被点击的listview	
+		int ID = parent.getId();
+		if(R.id.ClassesFragment_BottemLv == ID){
+			//底部listview被点击->显示箭头->顶部listview数据获取并显示->关闭顶部listview
+			boolean flag = true;
+			boolean rightflag = true;
+			for(int i = 0;i < list.size();i ++){
+				ClassesBottemInfo info = list.get(i);
+				//点击被开启的Item
+				if(info.flag && i == position){
+					info.flag = false;
+					list.set(i, info);
+					mTopLv.clearAnimation();
+					mTopLv.startAnimation(out);
+					flag = false;
+					break;
+				}else if(i!=position&& info.flag){
+					info.flag = false;
+					list.set(i, info);
+					rightflag = false;
+					break;
+				}
+
+			}
+			if(flag){
+				ClassesBottemInfo itemInfo = list.get(position);
+				itemInfo.flag = true;
+				list.set(position, itemInfo);
+				if(rightflag)
+					selectInterface();//发起请求
+			}
+			bottemAdapter.notifyDataSetChanged();
+		}else{
+
+		}
+	}
+
+	//根据index索引来判断网络请求接口
+	private void selectInterface(){
+		NetStrInfo info = new NetStrInfo();
+		info.ctx = getActivity();
+		info.hand = hand;
+		info.pramase = "";
+		info.netFlag = 1;
+		info.arg1 = Index;
+		switch(Index){
+		case 0:
+			info.interfaceStr = HttpModel.BOYURL;
+			break;
+		case 1:
+			info.interfaceStr = HttpModel.GIRLURL;
+			break;
+		case 2:
+			info.interfaceStr = HttpModel.LIFESTYLEURL;
+			break;
+		}
+		showDialog();
+		((MyApplication)getActivity().getApplicationContext()).Thread_Pool.execute(new HttpThread(info));
+	}
+
+}

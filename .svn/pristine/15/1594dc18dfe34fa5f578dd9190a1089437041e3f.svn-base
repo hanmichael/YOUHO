@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:id="@+id/GoodsValue_TopView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#1c1c1c" >
+
+        <ImageView
+            android:id="@+id/GoodsValue_BackImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_back_normal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="商品详情"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/GoodsValue_ShareImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/shared_sharebuttom_normal" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/GoodsValue_BottemView"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="#ffffff" >
+
+        <RelativeLayout
+            android:id="@+id/GoodsValue_CartRelative"
+            android:layout_width="60dp"
+            android:layout_height="match_parent" >
+
+            <ImageView
+                android:id="@+id/GoodsValue_CartImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/tabbar_cart_normal" />
+
+            <TextView
+                android:id="@+id/GoodsValue_NumTv"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="@dimen/view_frame_num"
+                android:background="@drawable/homepage_shopcart"
+                android:gravity="center"
+                android:text="3"
+                android:textColor="#ffffff"
+                android:textSize="10sp" />
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/GoodsValue_AddCartBtn"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/addcart_bg"
+            android:text="加入购物车"
+            android:textColor="#ffffff"
+            android:textSize="18sp" />
+
+        <ImageView
+            android:id="@+id/GoodsValue_LikeImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/likebutton_p" />
+    </RelativeLayout>
+
+    <com.sxt.view.GoodsScrollView
+        android:id="@+id/GoodsValue_Sc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/GoodsValue_BottemView"
+        android:layout_below="@id/GoodsValue_TopView" />
+
+</RelativeLayout>

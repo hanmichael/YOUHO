@@ -1,0 +1,26 @@
+package com.sxt.activity;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.sxt.thread.HttpThreadPool;
+
+import android.app.Application;
+import android.content.Context;
+
+public class MyApplication extends Application{
+
+	public static Context ctx;
+	public HttpThreadPool Thread_Pool;
+	public DialogActivity DialogAct;//对话框样式的activity 
+	public int ShopID = 0;//左侧菜单选择类型
+	public List<DialogActivity>dialogList = new ArrayList<DialogActivity>();
+
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		ctx = this;
+		Thread_Pool = new HttpThreadPool();
+	}
+
+}

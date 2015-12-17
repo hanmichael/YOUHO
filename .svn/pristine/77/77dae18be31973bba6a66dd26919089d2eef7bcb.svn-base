@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="60dp"
+    android:layout_height="45dp"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/ColorOrSizeItem_Tv"
+        android:layout_width="60dp"
+        android:layout_height="45dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/shopping_select_white_box"
+        android:gravity="center"
+        android:textColor="#000000"
+        android:textSize="20sp" />
+
+</LinearLayout>

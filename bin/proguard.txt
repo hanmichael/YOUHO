@@ -1,0 +1,141 @@
+# view res/layout/fragment_see.xml #generated:99
+# view res/layout/view_goodstop.xml #generated:104
+# view res/layout/view_goodsvalue_up.xml #generated:12
+# view res/layout/view_goodsvalue_up.xml #generated:85
+-keep class android.support.v4.view.ViewPager { <init>(...); }
+
+# view AndroidManifest.xml #generated:256
+-keep class cn.jpush.android.service.AlarmReceiver { <init>(...); }
+
+# view AndroidManifest.xml #generated:222
+-keep class cn.jpush.android.service.DaemonService { <init>(...); }
+
+# view AndroidManifest.xml #generated:200
+-keep class cn.jpush.android.service.DownloadService { <init>(...); }
+
+# view AndroidManifest.xml #generated:234
+-keep class cn.jpush.android.service.PushReceiver { <init>(...); }
+
+# view AndroidManifest.xml #generated:209
+-keep class cn.jpush.android.service.PushService { <init>(...); }
+
+# view res/layout/jpush_webview_layout.xml #generated:2
+-keep class cn.jpush.android.ui.FullScreenView { <init>(...); }
+
+# view AndroidManifest.xml #generated:187
+-keep class cn.jpush.android.ui.PushActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:177
+-keep class com.alipay.sdk.app.H5PayActivity { <init>(...); }
+
+# view res/layout/pay_main.xml #generated:15
+-keep class com.alipay.sdk.pay.demo.ExternalFragment { <init>(...); }
+
+# view AndroidManifest.xml #generated:101
+-keep class com.baidu.location.f { <init>(...); }
+
+# view AndroidManifest.xml #generated:155
+-keep class com.sxt.activity.AddCartActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:138
+-keep class com.sxt.activity.CameraActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:111
+-keep class com.sxt.activity.CaptureActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:160
+-keep class com.sxt.activity.CartListActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:144
+-keep class com.sxt.activity.DialogActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:126
+-keep class com.sxt.activity.FrameActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:148
+-keep class com.sxt.activity.GoodsListActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:151
+-keep class com.sxt.activity.GoodsValueActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:116
+-keep class com.sxt.activity.LoginActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:91
+-keep class com.sxt.activity.MyApplication { <init>(...); }
+
+# view AndroidManifest.xml #generated:163
+-keep class com.sxt.activity.OkOrderActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:141
+-keep class com.sxt.activity.PhotoAct { <init>(...); }
+
+# view AndroidManifest.xml #generated:107
+-keep class com.sxt.activity.ResultActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:169
+-keep class com.sxt.activity.SelectPhotoActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:132
+-keep class com.sxt.activity.SettingActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:129
+-keep class com.sxt.activity.SignActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:135
+-keep class com.sxt.activity.UserActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:172
+-keep class com.sxt.activity.VerssionActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:166
+-keep class com.sxt.activity.WebActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:259
+-keep class com.sxt.reciver.MyPushReceiver { <init>(...); }
+
+# view res/layout/fragment_brand.xml #generated:13
+-keep class com.sxt.view.BrandScrollUi { <init>(...); }
+
+# view res/layout/activity_uservalue.xml #generated:50
+# view res/layout/fragment_my.xml #generated:29
+-keep class com.sxt.view.CyclerImg { <init>(...); }
+
+# view res/layout/activity_goodsvalue.xml #generated:88
+-keep class com.sxt.view.GoodsScrollView { <init>(...); }
+
+# view res/layout/view_home.xml #generated:31
+# view res/layout/view_home.xml #generated:37
+# view res/layout/view_home.xml #generated:43
+# view res/layout/view_home.xml #generated:49
+# view res/layout/view_home.xml #generated:62
+# view res/layout/view_home.xml #generated:68
+# view res/layout/view_home.xml #generated:74
+# view res/layout/view_home.xml #generated:80
+-keep class com.sxt.view.IconView { <init>(...); }
+
+# view res/layout/fragment_brand.xml #generated:18
+-keep class com.sxt.view.LetterView { <init>(...); }
+
+# view res/layout/activity_okorder.xml #generated:32
+-keep class com.sxt.view.OrderScrollView { <init>(...); }
+
+# view res/layout/fragment_basesee.xml #generated:7
+# view res/layout/fragment_focus.xml #generated:7
+-keep class com.sxt.view.PullListView { <init>(...); }
+
+# view res/layout/fragment_home.xml #generated:8
+-keep class com.sxt.view.PullToLoadScroll { <init>(...); }
+
+# view res/layout/activity_goodslist.xml #generated:7
+-keep class com.sxt.view.SlidingRightUi { <init>(...); }
+
+# view res/layout/activity_frame.xml #generated:7
+-keep class com.sxt.view.SlidingUi { <init>(...); }
+
+# onClick res/layout/pay_external.xml #generated:94
+-keepclassmembers class * { *** check(...); }
+
+# onClick res/layout/pay_external.xml #generated:85
+-keepclassmembers class * { *** pay(...); }
+

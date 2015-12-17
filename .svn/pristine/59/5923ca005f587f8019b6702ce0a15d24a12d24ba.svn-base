@@ -1,0 +1,67 @@
+package com.sxt.activity;
+
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.sxt.base.BaseActivity;
+import com.sxt.base.BaseHandler;
+
+/**
+ * 购物车列表界面
+ * */
+public class CartListActivity extends BaseActivity implements 
+OnClickListener{
+
+	private ImageView mBackImg;
+	private TextView mEdtTv;
+	private ListView mLv;
+	private ImageView mAllImg;
+	private Button mPayBtn;
+	private Button mLikeBtn;
+	private TextView mAllTv;
+	private TextView mTv;
+
+	@Override
+	protected void initView() {
+		super.initView();
+		create(R.layout.activity_cartlist);
+		mBackImg = (ImageView) f(R.id.CartListAct_BackImg);
+		mEdtTv = (TextView) f(R.id.CartListAct_EdtTv);
+		mLv = (ListView) f(R.id.CartListAct_Lv);
+		mAllImg = (ImageView) f(R.id.CartListAct_SelectImg);
+		mPayBtn = (Button) f(R.id.CartListAct_PayBtn);
+		mLikeBtn = (Button) f(R.id.CartListAct_LikeBtn);
+		mAllTv = (TextView) f(R.id.CartListAct_AllTv);
+		mTv = (TextView) f(R.id.CartListAct_Tv);
+		mBackImg.setOnClickListener(this);
+		mEdtTv.setOnClickListener(this);
+		mAllImg.setOnClickListener(this);
+		mPayBtn.setOnClickListener(this);
+		mLikeBtn.setOnClickListener(this);
+	}
+
+	@Override
+	protected void initList() {
+		super.initList();
+	}
+
+	BaseHandler hand = new BaseHandler(){
+		public void handleMessage(android.os.Message msg) {
+			super.handleMessage(msg);
+			if(msg.what != 200){
+				return;
+			}
+		};
+	};
+
+	@Override
+	public void onClick(View arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

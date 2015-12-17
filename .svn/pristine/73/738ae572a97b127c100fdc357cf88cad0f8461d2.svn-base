@@ -1,0 +1,12 @@
+package com.sxt.bean;
+/**
+ * 商品详情实体类
+ * */
+public class GoodsInfo {
+
+	public String _id;
+	public String price;
+	public String distance;
+	public String goodsimg;
+
+}

@@ -1,0 +1,115 @@
+package com.sxt.activity;
+
+import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.sxt.base.BaseActivity;
+import com.sxt.base.BaseHandler;
+import com.sxt.model.WindowModel;
+import com.sxt.view.SlidingRightUi;
+/**
+ * 商品列表界面
+ * */
+public class GoodsListActivity extends BaseActivity implements OnClickListener{
+
+	private SlidingRightUi mRightUI;
+	private View mTopView;
+	private View mBottemView;
+	//topview下控件
+	private ViewPager mVp;
+	private ImageView mBackImg;
+	private ImageView mArrowImg;
+	private TextView mNameTv;
+	private TextView mCategoryTv;
+	private RelativeLayout mLeft,mCenter,mRight;
+	private TextView mLeftTv,mCenterTv,mRightTv;
+	private ImageView mLeftImg,mCenterImg,mRightImg;
+	private LinearLayout mLineLinear;
+	private TextView mChildLine;
+	//bottemview下控件
+
+	private String BrandName;
+	private String BrandValue;
+
+	@Override
+	protected void initView() {
+		super.initView();
+		BrandName = getIntent().getStringExtra("name");
+		//		BrandValue = getIntent().getStringExtra("value");
+		create(R.layout.activity_goodslist);
+		mRightUI = (SlidingRightUi) f(R.id.GoodsList_Sl);
+		mTopView = View.inflate(this, R.layout.view_goodstop, null);
+		mBottemView = View.inflate(this, R.layout.view_bottemgoods, null);
+		//初始化topview控件
+		mBackImg = (ImageView) mTopView.findViewById(R.id.GoodsList_BackImg);
+		mNameTv = (TextView) mTopView.findViewById(R.id.GoodsList_NameTv);
+		mArrowImg = (ImageView) mTopView.findViewById(R.id.GoodsList_ArrImg);
+		mCategoryTv = (TextView) mTopView.findViewById(R.id.GoodsList_CadegoryTv);
+		mLeft = (RelativeLayout) mTopView.findViewById(R.id.GoodsList_LeftRelative);
+		mCenter = (RelativeLayout) mTopView.findViewById(R.id.GoodsList_CenterRelative);
+		mRight = (RelativeLayout) mTopView.findViewById(R.id.GoodsList_RightRelative);
+		mLeftTv = (TextView) mTopView.findViewById(R.id.GoodsList_LeftTv);
+		mCenterTv = (TextView) mTopView.findViewById(R.id.GoodsList_CenterTv);
+		mRightTv = (TextView) mTopView.findViewById(R.id.GoodsList_RightTv);
+		mLeftImg = (ImageView) mTopView.findViewById(R.id.GoodsList_LeftImg);
+		mCenterImg = (ImageView) mTopView.findViewById(R.id.GoodsList_CenterImg);
+		mRightImg = (ImageView) mTopView.findViewById(R.id.GoodsList_RightImg);
+		mLineLinear = (LinearLayout) mTopView.findViewById(R.id.GoodsList_Line);
+		mVp = (ViewPager) mTopView.findViewById(R.id.GoodsList_Vp);
+		mChildLine = new TextView(this);
+		mChildLine.setLayoutParams
+		(new LinearLayout.LayoutParams
+				(WindowModel.WIDTH/3, LinearLayout.LayoutParams.MATCH_PARENT));
+		//初始化bottemview控件
+		//TopView下控件添加监听
+		mNameTv.setText(BrandName);
+		mBackImg.setOnClickListener(this);
+		mNameTv.setOnClickListener(this);
+		mCategoryTv.setOnClickListener(this);
+		mLeft.setOnClickListener(this);
+		mCenter.setOnClickListener(this);
+		mRight.setOnClickListener(this);
+		mRightUI.setTopView(mTopView);
+		mRightUI.setBottemView(mBottemView);
+		mRightUI.setVPFlag(true);
+	}
+
+	@Override
+	protected void initList() {
+		super.initList();
+	}
+
+	BaseHandler hand = new BaseHandler(){
+		public void handleMessage(android.os.Message msg) {
+			super.handleMessage(msg);
+		};
+	};
+
+	@Override
+	public void onClick(View v) {
+
+		int ID = v.getId();
+		switch(ID){
+		case R.id.GoodsList_BackImg:
+			finish();
+			break;
+		case R.id.GoodsList_NameTv:
+			break;
+		case R.id.GoodsList_CadegoryTv:
+			break;
+		case R.id.GoodsList_LeftRelative:
+			break;
+		case R.id.GoodsList_CenterRelative:
+			break;
+		case R.id.GoodsList_RightRelative:
+			break;
+		}
+
+	}
+
+}

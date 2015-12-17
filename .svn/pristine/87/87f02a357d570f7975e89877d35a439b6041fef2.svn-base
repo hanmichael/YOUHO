@@ -1,0 +1,8 @@
+package com.sxt.model;
+
+public class HttpModel {
+
+	public static String HTTPURL = "";
+	public static String IMGURL = "";
+
+}

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="#ffffff" >
+
+        <ImageView
+            android:id="@+id/OrderTop_Address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/mine_address_icon" />
+
+        <ImageView
+            android:id="@+id/OrderTop_Arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/arrow_left" />
+
+        <TextView
+            android:id="@+id/OrderTop_Phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@id/OrderTop_Arrow"
+            android:text="18500373772"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/OrderTop_Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/OrderTop_Address"
+            android:text="张鑫一"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/OrderTop_AddressTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/OrderTop_Name"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@id/OrderTop_Address"
+            android:text="北京市西三旗桥东"
+            android:textColor="#000000" />
+    </RelativeLayout>
+
+</LinearLayout>

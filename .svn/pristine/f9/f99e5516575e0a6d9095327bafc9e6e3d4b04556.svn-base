@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="homepager_title">
+        <item>热门品牌</item>
+        <item>潮流上装</item>
+        <item>经典裤装</item>
+        <item>热门配饰</item>
+        <item>其他</item>
+    </string-array>
+
+</resources>

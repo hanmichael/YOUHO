@@ -1,0 +1,270 @@
+package com.sxt.activity;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Color;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.sxt.base.BaseFragmentActivity;
+import com.sxt.bean.BrandInfo;
+import com.sxt.fragment.CartFragment;
+import com.sxt.fragment.CategoryFragment;
+import com.sxt.fragment.HomeFragment;
+import com.sxt.fragment.SeeFragment;
+import com.sxt.fragment.UserFragment;
+import com.sxt.model.ActionModel;
+import com.sxt.view.SlidingUi;
+
+/**
+ * 软件框架界面
+ * 
+ * */
+public class FrameActivity extends BaseFragmentActivity implements 
+OnItemClickListener,OnClickListener{
+
+	private SlidingUi mSliding;//自定义抽屉控件
+	private View mBottemView;//底部布局
+	private View mTopView;//顶部布局
+	private ListView mBottemLv;//底部布局中listview
+	private String[]BottemLvArray;//底部listview数据源
+	private ArrayAdapter<String> BottemAdapter;
+	private ImageView mTabMenumImg;
+	private RelativeLayout mFrameTop_TopRelative;
+	private RelativeLayout mHomeRelative,mCategoryRelative,mSeeRelative,mCartRelative,mUserRelative;
+	private ImageView mHomeImg,mCategoryImg,mSeeImg,mCartImg,mUserImg;
+	private TextView mHomeTv,mCategoryTv,mSeeTv,mCartTv,mUserTv;
+	private HomeFragment mHomeFragment;
+	private CategoryFragment mCategoryFragment;
+	private SeeFragment mSeeFragment;
+	private CartFragment mCartFragment;
+	private UserFragment mUserFragment;
+	private FragmentManager manager;
+	private MyUiReciver myReciver = new MyUiReciver();//广播接收器
+	private IntentFilter intentFilter = new IntentFilter();
+
+	@Override
+	protected void initView() {
+		super.initView();
+		//注册刷新slidingui的广播接收器
+		intentFilter.addAction(ActionModel.FrameUiAction);
+		registerReceiver(myReciver, intentFilter);
+		manager = getSupportFragmentManager();
+		create(R.layout.activity_frame);
+		mBottemView = View.inflate(this, R.layout.view_frame_bottem, null);
+		mTopView = View.inflate(this, R.layout.view_frame_top, null);
+		mFrameTop_TopRelative = (RelativeLayout) mTopView.findViewById(R.id.FrameTop_TopRelative);
+		mSliding = (SlidingUi) f(R.id.FrameAct_Sliding);
+		initList();
+		mBottemLv = (ListView) mBottemView.findViewById(R.id.FrameBottem_Lv);
+		BottemAdapter = new ArrayAdapter<String>
+		(this, R.layout.item_bottemleft, R.id.ItemBottem_Tv, BottemLvArray);
+		mBottemLv.setAdapter(BottemAdapter);
+		mBottemLv.setOnItemClickListener(this);
+		mSliding.setBottem(mBottemView);
+		mSliding.setTop(mTopView);
+		mTabMenumImg = (ImageView) mTopView.findViewById(R.id.FrameTop_MenuImg);
+		mHomeRelative = (RelativeLayout) mTopView.findViewById(R.id.FrameTop_HomeRelative);
+		mCategoryRelative = (RelativeLayout) mTopView.findViewById(R.id.FrameTop_CategoryRelative);
+		mSeeRelative = (RelativeLayout) mTopView.findViewById(R.id.FrameTop_SeeRelative);
+		mCartRelative = (RelativeLayout) mTopView.findViewById(R.id.FrameTop_CartRelative);
+		mUserRelative = (RelativeLayout) mTopView.findViewById(R.id.FrameTop_UserRelative);
+		mHomeImg = (ImageView) mTopView.findViewById(R.id.FrameTop_HomeImg);
+		mCategoryImg = (ImageView) mTopView.findViewById(R.id.FrameTop_CategoryImg);
+		mSeeImg = (ImageView) mTopView.findViewById(R.id.FrameTop_SeeImg);
+		mCartImg = (ImageView) mTopView.findViewById(R.id.FrameTop_CartImg);
+		mUserImg = (ImageView) mTopView.findViewById(R.id.FrameTop_UserImg);
+		mHomeTv = (TextView) mTopView.findViewById(R.id.FrameTop_HomeTv);
+		mCategoryTv = (TextView) mTopView.findViewById(R.id.FrameTop_CategoryTv);
+		mSeeTv = (TextView) mTopView.findViewById(R.id.FrameTop_SeeTv);
+		mCartTv = (TextView) mTopView.findViewById(R.id.FrameTop_CartTv);
+		mUserTv = (TextView) mTopView.findViewById(R.id.FrameTop_UserTv);
+		selectFragment(R.id.FrameTop_HomeRelative);
+		mTabMenumImg.setOnClickListener(this);
+		mHomeRelative.setOnClickListener(this);
+		mCategoryRelative.setOnClickListener(this);
+		mSeeRelative.setOnClickListener(this);
+		mCartRelative.setOnClickListener(this);
+		mUserRelative.setOnClickListener(this);
+	}
+
+	@Override
+	protected void onDestroy() {
+		unregisterReceiver(myReciver);
+		super.onDestroy();
+	}
+
+	//初始化数据方法
+	private void initList(){
+		BottemLvArray = this.getResources().getStringArray(R.array.frameLeft);
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		//关闭抽屉
+		mSliding.stopSliding();
+		//切换主题
+		((MyApplication)getApplicationContext()).ShopID = position+1;
+	}
+
+	@Override
+	public void onClick(View v) {
+		if(v.getId() == R.id.FrameTop_MenuImg){
+			Log.e("", "FrameTop_MenuImg");
+			//修改抽屉开启或者关闭
+			if(mSliding.IsSliding()){
+				//开启状态
+				mSliding.stopSliding();
+			}else{
+				//关闭状态
+				mSliding.startSliding();
+			}
+		}else if(R.id.FrameTop_CartRelative == v.getId()){
+
+			Intent intent = new Intent(FrameActivity.this,CartListActivity.class);
+			startActivity(intent);
+		}else{
+			selectViewStyle(v.getId());
+			goneFragment();
+			selectFragment(v.getId());
+		}
+
+	}
+
+	//切换底部iamgeview以及textview样式方法
+	private void selectViewStyle(int ID){
+		mHomeImg.setImageResource(R.drawable.tabbar_homepage_normal);
+		mCategoryImg.setImageResource(R.drawable.tabbar_category_normal);
+		mSeeImg.setImageResource(R.drawable.tabbar_see_normal);
+		mCartImg.setImageResource(R.drawable.tabbar_cart_normal);
+		mUserImg.setImageResource(R.drawable.tabbar_mine_normal);
+		mHomeTv.setTextColor(Color.GRAY);
+		mCategoryTv.setTextColor(Color.GRAY);
+		mSeeTv.setTextColor(Color.GRAY);
+		mCartTv.setTextColor(Color.GRAY);
+		mUserTv.setTextColor(Color.GRAY);
+		switch(ID){
+		case R.id.FrameTop_HomeRelative:
+			mHomeImg.setImageResource(R.drawable.tabbar_homepage_highlighted_gray);
+			mHomeTv.setTextColor(Color.BLACK);
+			break;
+		case R.id.FrameTop_CategoryRelative:
+			mCategoryImg.setImageResource(R.drawable.tabbar_category_highlighted_gray);
+			mCategoryTv.setTextColor(Color.BLACK);
+			break;
+		case R.id.FrameTop_SeeRelative:
+			mSeeImg.setImageResource(R.drawable.tabbar_see_highlighted_gray);
+			mSeeTv.setTextColor(Color.BLACK);
+			break;
+		case R.id.FrameTop_CartRelative:
+			mCartImg.setImageResource(R.drawable.tabbar_cart_highlighted_gray);
+			mCartTv.setTextColor(Color.BLACK);
+			break;
+		case R.id.FrameTop_UserRelative:
+			mUserImg.setImageResource(R.drawable.tabbar_mine_highlighted_gray);
+			mUserTv.setTextColor(Color.BLACK);
+			break;
+		}
+	}
+
+	//切换fragment方法 
+	private void selectFragment(int ID){
+		FragmentTransaction ft = manager.beginTransaction();
+		switch(ID){
+		case R.id.FrameTop_HomeRelative:
+			mFrameTop_TopRelative.setVisibility(View.VISIBLE);
+			if(mHomeFragment == null){
+				mHomeFragment = new HomeFragment();
+				ft.add(R.id.FrameTop_ViewGroup, mHomeFragment);
+			}else{
+				ft.show(mHomeFragment);
+			}
+			break;
+		case R.id.FrameTop_CategoryRelative:
+			mFrameTop_TopRelative.setVisibility(View.GONE);
+			if(mCategoryFragment == null){
+				mCategoryFragment = new CategoryFragment();
+				ft.add(R.id.FrameTop_ViewGroup, mCategoryFragment);
+			}else{
+				ft.show(mCategoryFragment);
+			}
+			break;
+		case R.id.FrameTop_SeeRelative:
+			mFrameTop_TopRelative.setVisibility(View.GONE);
+			if(mSeeFragment == null){
+				mSeeFragment = new SeeFragment();
+				ft.add(R.id.FrameTop_ViewGroup, mSeeFragment);
+			}else{
+				ft.show(mSeeFragment);
+			}
+			break;
+		case R.id.FrameTop_CartRelative:
+			break;
+		case R.id.FrameTop_UserRelative:
+			mFrameTop_TopRelative.setVisibility(View.GONE);
+			if(mUserFragment == null){
+				mUserFragment = new UserFragment();
+				ft.add(R.id.FrameTop_ViewGroup, mUserFragment);
+			}else{
+				ft.show(mUserFragment);
+			}
+			break;
+		}
+		ft.commit();
+		//		mSliding.getWH();
+	}
+	//隐藏所有fragment方法
+	private void goneFragment(){
+		FragmentTransaction ft = manager.beginTransaction();
+		if(mHomeFragment!=null){
+			ft.hide(mHomeFragment);
+		}
+		if(mCategoryFragment != null){
+			ft.hide(mCategoryFragment);
+		}
+		if(mSeeFragment != null){
+			ft.hide(mSeeFragment);
+		}
+		if(mCartFragment!= null){
+			ft.hide(mCartFragment);
+		}
+		if(mUserFragment != null){
+			ft.hide(mUserFragment);
+		}
+		ft.commit();
+	}
+
+	//接收子fragment控制当前界面中的slidingui开启以及关闭操作
+	private class MyUiReciver extends BroadcastReceiver{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if(intent.getAction().equals(ActionModel.FrameUiAction)){
+				//接受到子fragment修改slidingui请I去
+				//修改抽屉开启或者关闭
+				if(mSliding.IsSliding()){
+					//开启状态
+					mSliding.stopSliding();
+				}else{
+					//关闭状态
+					mSliding.startSliding();
+				}
+			}
+		}
+
+	}
+
+}

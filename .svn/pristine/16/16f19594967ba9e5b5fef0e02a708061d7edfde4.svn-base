@@ -1,0 +1,31 @@
+package com.sxt.activity;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.sxt.bean.UserInfo;
+import com.sxt.thread.HttpThreadPool;
+
+import android.app.Application;
+import android.content.Context;
+
+public class MyApplication extends Application{
+
+	public static Context ctx;
+	public HttpThreadPool Thread_Pool;
+	public DialogActivity DialogAct;//对话框样式的activity 
+	public int ShopID = 0;//左侧菜单选择类型
+	public List<DialogActivity>dialogList = new ArrayList<DialogActivity>();
+	public UserInfo userInfo=null;
+
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		ctx = this;
+		Thread_Pool = new HttpThreadPool();
+		//查询本地缓存用户信息->记住用户登录状态->添加虚拟数据
+		userInfo = new UserInfo();
+		userInfo.id = "1";
+	}
+
+}

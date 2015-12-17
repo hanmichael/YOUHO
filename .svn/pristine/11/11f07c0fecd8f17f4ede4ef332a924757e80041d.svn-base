@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="frameLeft">
+        <item>男生</item>
+        <item>女生</item>
+        <item>潮童</item>
+        <item>创意生活</item>
+        <item>逛</item>
+    </string-array>
+
+</resources>

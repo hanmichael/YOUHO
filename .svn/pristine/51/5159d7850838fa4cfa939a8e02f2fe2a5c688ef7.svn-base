@@ -1,0 +1,165 @@
+package com.sxt.activity;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.ExpandableListView;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.sxt.adapter.OkOrderAdapter;
+import com.sxt.adapter.OrderExpandAdapter;
+import com.sxt.base.BaseActivity;
+import com.sxt.base.BaseHandler;
+import com.sxt.bean.CartListInfo;
+import com.sxt.bean.NetStrInfo;
+import com.sxt.bean.OrderChildInfo;
+import com.sxt.bean.OrderInfo;
+import com.sxt.model.HttpModel;
+import com.sxt.thread.HttpThread;
+import com.sxt.view.OrderScrollView;
+
+public class OkOrderActivity extends BaseActivity implements 
+OnClickListener{
+
+	private ImageView img;
+	private OrderScrollView msc;
+	//toplinear中使用view
+	private View topView;
+	private TextView mAddress;
+	//cenlinear使用的view
+	private ExpandableListView mexpand;
+	private ListView mLv;
+	//bottemlinear中使用view
+	private View bottemView;
+	private TextView mPrice;
+	private Button mBtn;
+	//mLv数据源
+	private List<CartListInfo>list;
+	private OkOrderAdapter adapter;
+	//mexpand数据源
+	private List<OrderInfo>orderList = new ArrayList<OrderInfo>();
+	private OrderExpandAdapter expandAdapter;
+
+	@Override
+	protected void initView() {
+		super.initView();
+		create(R.layout.activity_okorder);
+		img = (ImageView) f(R.id.OkOrderAct_BackImg);
+		msc = (OrderScrollView) f(R.id.OkOrderAct_Sc);
+		//top
+		topView = View.inflate(this, R.layout.view_ordertop, null);
+		mAddress = (TextView) topView.findViewById(R.id.OrderTop_AddressTv);
+		//bottem
+		bottemView = View.inflate(this, R.layout.view_orderbottem, null);
+		mPrice = (TextView) bottemView.findViewById(R.id.OrderBottem_Money);
+		mBtn = (Button) bottemView.findViewById(R.id.OrderBottem_OkBtn);
+		//center
+		mexpand = new ExpandableListView(this);
+		mexpand.setGroupIndicator(null);
+		mLv = new ListView(this);
+		img.setOnClickListener(this);
+		mBtn.setOnClickListener(this);
+		msc.setTopView(topView);
+		msc.setBottemView(bottemView);
+	}
+
+	@Override
+	protected void initList() {
+		super.initList();
+		NetStrInfo info = new NetStrInfo();
+		info.arg1 = 0;
+		info.ctx = this;
+		info.hand = hand;
+		info.interfaceStr = HttpModel.OKORDER;
+		info.netFlag = 1;
+		info.pramase = "parames={\"userid\":\""+((MyApplication)getApplicationContext()).userInfo.id+"\"}";
+		((MyApplication)getApplicationContext()).Thread_Pool.execute(new HttpThread(info));
+		//创建虚拟支付方式等内容
+		OrderInfo in1 = new OrderInfo();
+		in1.title="支付方式";
+		in1.value = "在线支付";
+		List<OrderChildInfo>in1list = new ArrayList<OrderChildInfo>();
+		in1list.add(new OrderChildInfo("在线支付", true));
+		in1list.add(new OrderChildInfo("货到付款", false));
+		in1.list = in1list;
+		orderList.add(in1);
+		//-------------------------------
+		OrderInfo in2 = new OrderInfo();
+		in2.title="配送方式";
+		in2.value = "普通快递";
+		List<OrderChildInfo>in2list = new ArrayList<OrderChildInfo>();
+		in2list.add(new OrderChildInfo("普通快递", true));
+		in2list.add(new OrderChildInfo("顺风", false));
+		in2.list = in2list;
+		orderList.add(in2);
+		//--------------------------------------
+		OrderInfo in3 = new OrderInfo();
+		in3.title="送货时间";
+		in3.value = "工作日";
+		List<OrderChildInfo>in3list = new ArrayList<OrderChildInfo>();
+		in3list.add(new OrderChildInfo("工作日", true));
+		in3list.add(new OrderChildInfo("假期", false));
+		in3list.add(new OrderChildInfo("全天", false));
+		in3.list = in3list;
+		orderList.add(in3);
+		expandAdapter = new OrderExpandAdapter(orderList, this);
+		mexpand.setAdapter(expandAdapter);
+		//添加给OrderScrollView
+		msc.setExpand(mexpand);
+	}
+
+	BaseHandler hand = new BaseHandler(){
+		public void handleMessage(android.os.Message msg) {
+			super.handleMessage(msg);
+			if(msg.what!=200){
+				return;
+			}
+			//确认订单借口返回值
+			if(msg.arg1 == 0){
+				list = (List<CartListInfo>) msg.obj;
+				adapter = new OkOrderAdapter(list,
+						OkOrderActivity.this);
+				mLv.setAdapter(adapter);
+				msc.setLv(mLv);
+			}else if(msg.arg1 == 1){
+				List<String> l = (List<String>) msg.obj;
+				if(!l.get(0).equals("ok")){
+					Toast("订单生成失败");
+					return;
+				}else{
+					Toast("订单生成"+l.get(1));
+				}
+			}
+
+		};
+	};
+
+	@Override
+	public void onClick(View arg0) {
+		int ID = arg0.getId();
+		switch(ID){
+		case R.id.OkOrderAct_BackImg:
+			finish();
+			break;
+		case R.id.OrderBottem_OkBtn:
+			//用户确认订单->产生付款订单号->支付宝支付条件
+			NetStrInfo info = new NetStrInfo();
+			info.arg1 = 1;
+			info.ctx = this;
+			info.hand = hand;
+			info.interfaceStr = HttpModel.CONFIRM;
+			info.netFlag = 1;
+			info.pramase = "parames=111";//确认后要购买商品->商品id,颜色,尺寸,数量,用户id
+			((MyApplication)getApplicationContext()).Thread_Pool.execute(new HttpThread(info));
+			break;
+		}
+	}
+
+}

@@ -1,0 +1,128 @@
+package com.sxt.fragment;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.sxt.activity.R;
+import com.sxt.base.BaseFragment;
+import com.sxt.base.BaseHandler;
+import com.sxt.callback.PullToLoadScrollLissener;
+import com.sxt.view.AdverstView;
+import com.sxt.view.PullToLoadScroll;
+
+/**
+ * 首页fragment
+ * */
+public class HomeFragment extends BaseFragment implements PullToLoadScrollLissener{
+
+	private View view;//与当前fragment关联的view->带下拉刷新以及上啦加载更多的scrollview->fragment_home->1
+	private PullToLoadScroll mSC;//在fragment_home下->自定义scrollview->上啦下拉作用-不能直接添加xml布局->2
+	private AdverstView aView = new AdverstView();//自定义广告界面->方便服用性->5(最上层)
+	private View homeView;//当前界面要显示的内容->在自定义Scrollview中显示->view_home->3
+	private LinearLayout mAdverstLinear;//装载滚动广告的容器->在homeview下的linearLayout->4
+	private Bitmap PointN;
+	private Bitmap PointP;
+	private List<View>list = new ArrayList<View>();
+
+	@Override
+	public View initView() {
+		view = View.inflate(getActivity(), R.layout.fragment_home, null);
+		mSC = (PullToLoadScroll) view.findViewById(R.id.HomeFragmentSC);
+		mSC.setCall(this);//设置下拉以及上啦监听
+		homeView = View.inflate(getActivity(), R.layout.view_home, null);
+		mAdverstLinear = (LinearLayout) homeView.findViewById(R.id.HomeFragment_AdverstLinear);
+		//创建动态广告界面
+		aView.create(getActivity(), PointN, PointP, list, 400);
+		mAdverstLinear.addView(aView.getView());
+		mSC.setContentView(homeView);
+		return view;
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		aView.startTime();
+	}
+
+	@Override
+	protected void initList() {
+		super.initList();
+		PointN = BitmapFactory.decodeResource(getResources(), R.drawable.home_banner_dot_down_black);
+		PointP = BitmapFactory.decodeResource(getResources(), R.drawable.home_banner_dot_down);
+		for(int i = 0;i < 10;i++){
+			ImageView img = new ImageView(getActivity());
+			//			img.setImageResource(R.drawable.homepage_background);
+			img.setBackgroundResource(R.drawable.homepage_background);
+			img.setLayoutParams(
+					new ViewGroup.LayoutParams
+					(ViewGroup.LayoutParams.MATCH_PARENT,
+							ViewGroup.LayoutParams.MATCH_PARENT));
+			list.add(img);
+		}  
+	}
+
+	@Override
+	protected void setClick() {
+		super.setClick();
+	}
+
+	@Override
+	public void RefrashCall() {
+
+		new Thread(){
+
+			public void run(){
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				hand.sendEmptyMessage(200);
+			}
+
+		}.start();
+
+	}
+
+	@Override
+	public void LoadCall() {
+		new Thread(){
+
+			public void run(){
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				hand.sendEmptyMessage(200);
+			}
+
+		}.start();
+	}
+
+	public void onDestroy() {
+		super.onDestroy();
+		//销毁时关闭广告轮播操作
+		aView.stopTime();
+	};
+
+	//处理所有网络相关handler
+	BaseHandler hand = new BaseHandler(){
+		public void handleMessage(android.os.Message msg) {
+			super.handleMessage(msg);
+			mSC.commplate();
+		};
+	};
+
+}
